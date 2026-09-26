@@ -39,6 +39,83 @@ erDiagram
         string estado
         datetime fechaCreacion
     }
+# Diagrama de Clases - VozYControl
 
+Este diagrama detalla los atributos y operaciones (*métodos*) clave de las clases lógicas del sistema, sirviendo como plano de diseño orientado a objetos para el desarrollo de la aplicación.
+
+```mermaid
+classDiagram
+    class Usuario {
+        +int idUsuario
+        +string nombre
+        +string correo
+        +string contrasena
+        +string rol
+        +registrarse()
+        +iniciarSesion()
+        +actualizarPerfil()
+    }
+    class ServicioPublico {
+        +int idServicio
+        +string nombre
+        +string descripcion
+        +string requisitos
+        +consultarRequisitos()
+        +filtrarPorZona()
+    }
+    class Categoria {
+        +int idCategoria
+        +string nombreCategoria
+    }
+    class Ubicacion {
+        +int idUbicacion
+        +string zona
+    }
+    class ReporteCiudadano {
+        +int idReporte
+        +string descripcionFalla
+        +string evidenciaUrl
+        +string estado
+        +datetime fechaCreacion
+        +crearReporte()
+        +adjuntarEvidencia()
+        +consultarEstado()
+    }
+
+    Usuario "1" --> "*" ReporteCiudadano : crea
+    ServicioPublico "1" --> "*" ReporteCiudadano : asociado a
+    Categoria "1" --> "*" ServicioPublico : agrupa
+    Ubicacion "1" --> "*" ServicioPublico : localiza
+
+# Diagrama de Casos de Uso - VozYControl
+
+Este diagrama ilustra las interacciones de los actores principales (**Ciudadano / Veedor** y **Administrador**) con las funcionalidades del sistema **VozYControl**.
+
+```mermaid
+flowchart TB
+    subgraph Actores
+        Ciudadano([Ciudadano / Veedor])
+        Admin([Administrador])
+    end
+
+    subgraph Sistema VozYControl
+        UC1[Registrarse / Iniciar Sesión]
+        UC2[Buscar Servicios y Filtrar por Ubicación]
+        UC3[Consultar Requisitos y FAQ]
+        UC4[Crear Reporte Ciudadano con Evidencias]
+        UC5[Consultar Estado de Reportes]
+        UC6[Gestionar y Revisar Reportes]
+        UC7[Actualizar Oferta de Servicios]
+    end
+
+    Ciudadano --> UC1
+    Ciudadano --> UC2
+    Ciudadano --> UC3
+    Ciudadano --> UC4
+    Ciudadano --> UC5
+
+    Admin --> UC1
+    Admin --> UC6
+    Admin --> UC7
 
 

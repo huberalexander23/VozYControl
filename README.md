@@ -39,11 +39,7 @@ erDiagram
         string estado
         datetime fechaCreacion
     }
-# Diagrama de Clases - VozYControl
 
-Este diagrama detalla los atributos y operaciones (*métodos*) clave de las clases lógicas del sistema, sirviendo como plano de diseño orientado a objetos para el desarrollo de la aplicación.
-
-```mermaid
 classDiagram
     class Usuario {
         +int idUsuario
@@ -87,11 +83,6 @@ classDiagram
     Categoria "1" --> "*" ServicioPublico : agrupa
     Ubicacion "1" --> "*" ServicioPublico : localiza
 
-# Diagrama de Casos de Uso - VozYControl
-
-Este diagrama ilustra las interacciones de los actores principales (**Ciudadano / Veedor** y **Administrador**) con las funcionalidades del sistema **VozYControl**.
-
-```mermaid
 flowchart TB
     subgraph Actores
         Ciudadano([Ciudadano / Veedor])
@@ -117,5 +108,3 @@ flowchart TB
     Admin --> UC1
     Admin --> UC6
     Admin --> UC7
-
-

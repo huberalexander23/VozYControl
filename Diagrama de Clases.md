@@ -1,6 +1,6 @@
 # Diagrama de Clases - VozYControl
 
-Este diagrama detalla los atributos y operaciones (*métodos*) clave de las clases lógicas del sistema, sirviendo como plano de diseño orientado a objetos para el desarrollo de la aplicación.
+Este diagrama detalla los atributos y operaciones clave de las clases lógicas del sistema, sirviendo como plano de diseño orientado a objetos para el desarrollo de la aplicación.
 
 ```mermaid
 classDiagram

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VozYControl — Nuevo reporte</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a href="panel.html" class="topbar-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      Panel
+    </a>
+    <span class="brand" style="font-size:15px">Nuevo reporte</span>
+  </div>
+</header>
+
+<main>
+  <div class="container page-pad">
+
+    <form id="report-form" novalidate>
+      <p style="font-size:12px;color:var(--color-text-muted);margin:0 0 18px">Denuncia una falla o negación de servicio. Adjunta evidencia siempre que puedas.</p>
+
+      <div class="field" id="field-categoria">
+        <label for="categoria">Categoría del servicio</label>
+        <select id="categoria" required>
+          <option value="">Selecciona una categoría</option>
+          <option>Agua potable</option>
+          <option>Salud</option>
+          <option>Educación</option>
+          <option>Energía</option>
+        </select>
+        <p class="field-error">Selecciona una categoría.</p>
+      </div>
+
+      <div class="field" id="field-ubicacion">
+        <label for="ubicacion">Ubicación</label>
+        <input type="text" id="ubicacion" placeholder="Barrio, dirección o punto de referencia" required>
+        <p class="field-error">Indica dónde ocurrió el hecho.</p>
+      </div>
+
+      <div class="field" id="field-descripcion">
+        <label for="descripcion">Descripción del hecho</label>
+        <textarea id="descripcion" placeholder="Describe qué ocurrió, cuándo y quién te atendió..." required></textarea>
+        <p class="field-error">Describe brevemente lo ocurrido.</p>
+      </div>
+
+      <div class="field">
+        <label for="evidencia">Evidencia (foto o documento)</label>
+        <label class="file-drop" for="evidencia">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E4B63" stroke-width="2" aria-hidden="true" style="margin:0 auto 6px;display:block"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg>
+          <span class="file-drop-label">Adjuntar archivo</span>
+          <p class="file-drop-name" id="file-name">Ningún archivo seleccionado</p>
+          <input type="file" id="evidencia" accept="image/*,.pdf">
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-accent">Enviar reporte</button>
+    </form>
+
+    <div class="success-panel" id="success-panel" hidden>
+      <div class="success-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h1>Reporte enviado</h1>
+      <p>Le avisaremos por notificación cuando la entidad responda.</p>
+      <a href="panel.html" class="btn btn-secondary">Volver al panel</a>
+    </div>
+
+  </div>
+</main>
+
+<nav class="tabbar" aria-label="Navegación global">
+  <div class="container">
+    <a href="panel.html" class="tab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+      Inicio
+    </a>
+    <a href="#" class="tab is-disabled" aria-disabled="true" title="Próximamente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      Buscar
+    </a>
+    <a href="reportar.html" class="tab" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      Reportar
+    </a>
+    <a href="#" class="tab is-disabled" aria-disabled="true" title="Próximamente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      Perfil
+    </a>
+  </div>
+</nav>
+
+<script src="js/main.js"></script>
+</body>
+</html>

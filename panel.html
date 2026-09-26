@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VozYControl — Panel de usuario</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <div>
+      <div style="color:#C9DCE4;font-size:11px">Hola,</div>
+      <div class="brand" style="font-size:17px">María Fernández</div>
+    </div>
+    <a href="index.html" class="topbar-link">Cerrar sesión</a>
+  </div>
+</header>
+
+<main>
+  <div class="container page-pad">
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-value accent">3</div>
+        <div class="stat-label">Reportes activos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value success">7</div>
+        <div class="stat-label">Resueltos</div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2 class="section-title">Mis reportes</h2>
+      <a href="reportar.html" style="font-size:12px;font-weight:700;color:var(--color-accent);text-decoration:none">+ Nuevo reporte</a>
+    </div>
+
+    <div class="report-row">
+      <div>
+        <p class="report-title">Corte de agua sin aviso</p>
+        <p class="report-date">20 sep</p>
+      </div>
+      <span class="badge badge-progress">En curso</span>
+    </div>
+    <div class="report-row">
+      <div>
+        <p class="report-title">Falta de insumos en centro salud</p>
+        <p class="report-date">15 sep</p>
+      </div>
+      <span class="badge badge-pending">Pendiente</span>
+    </div>
+    <div class="report-row">
+      <div>
+        <p class="report-title">Colegio sin cupo asignado</p>
+        <p class="report-date">2 sep</p>
+      </div>
+      <span class="badge badge-done">Resuelto</span>
+    </div>
+    <div class="report-row">
+      <div>
+        <p class="report-title">Alumbrado público dañado</p>
+        <p class="report-date">28 ago</p>
+      </div>
+      <span class="badge badge-progress">En curso</span>
+    </div>
+  </div>
+</main>
+
+<nav class="tabbar" aria-label="Navegación global">
+  <div class="container">
+    <a href="panel.html" class="tab" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+      Inicio
+    </a>
+    <a href="#" class="tab is-disabled" aria-disabled="true" title="Próximamente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      Buscar
+    </a>
+    <a href="reportar.html" class="tab">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      Reportar
+    </a>
+    <a href="#" class="tab is-disabled" aria-disabled="true" title="Próximamente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      Perfil
+    </a>
+  </div>
+</nav>
+
+<script src="js/main.js"></script>
+</body>
+</html>

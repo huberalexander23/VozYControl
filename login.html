@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VozYControl — Iniciar sesión</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a href="index.html" class="topbar-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      Inicio
+    </a>
+    <span class="brand" style="font-size:15px">VozYControl</span>
+  </div>
+</header>
+
+<main class="no-tabbar">
+  <div class="container page-pad">
+
+    <div class="auth-tabs" role="tablist" aria-label="Acceso">
+      <button class="auth-tab" role="tab" id="tab-login" aria-controls="panel-login" aria-selected="true" type="button">Iniciar sesión</button>
+      <button class="auth-tab" role="tab" id="tab-register" aria-controls="panel-register" aria-selected="false" type="button">Registrarse</button>
+    </div>
+
+    <div class="auth-panel" id="panel-login" role="tabpanel" aria-labelledby="tab-login">
+      <form novalidate onsubmit="return false">
+        <div class="field">
+          <label for="login-email">Correo electrónico</label>
+          <input type="email" id="login-email" placeholder="nombre@correo.com" required>
+        </div>
+        <div class="field">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" placeholder="••••••••" required>
+        </div>
+        <a href="#" class="helper-link">¿Olvidaste tu contraseña?</a>
+        <a href="panel.html" class="btn btn-accent">Continuar</a>
+      </form>
+    </div>
+
+    <div class="auth-panel" id="panel-register" role="tabpanel" aria-labelledby="tab-register" hidden>
+      <form novalidate onsubmit="return false">
+        <div class="field">
+          <label for="reg-name">Nombre completo</label>
+          <input type="text" id="reg-name" placeholder="María Fernández" required>
+        </div>
+        <div class="field">
+          <label for="reg-email">Correo electrónico</label>
+          <input type="email" id="reg-email" placeholder="nombre@correo.com" required>
+        </div>
+        <div class="field">
+          <label for="reg-password">Contraseña</label>
+          <input type="password" id="reg-password" placeholder="Mínimo 8 caracteres" required>
+        </div>
+        <a href="panel.html" class="btn btn-accent" style="margin-top:4px">Crear cuenta</a>
+      </form>
+    </div>
+
+  </div>
+</main>
+
+<script src="js/main.js"></script>
+</body>
+</html>

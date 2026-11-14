@@ -22,9 +22,7 @@
     <form id="login-form" novalidate>
       <div class="field"><label for="login-email">Correo electrónico</label><input type="email" id="login-email" name="email" placeholder="nombre@correo.com" autocomplete="email" required></div>
       <div class="field"><label for="login-password">Contraseña</label><input type="password" id="login-password" name="password" placeholder="Ingresa tu contraseña" autocomplete="current-password" required></div>
-      <p class="helper-link">La recuperación de contraseña estará disponible cuando se conecte el servicio de usuarios.</p>
       <button type="submit" class="btn btn-accent btn-full">Continuar</button>
-      <p id="login-message" class="form-note" role="status" aria-live="polite">Modo demostración: completa los campos para recorrer el prototipo. No se valida una cuenta real.</p>
     </form>
   </section>
   <section class="auth-panel" id="panel-register" role="tabpanel" aria-labelledby="tab-register" hidden>
@@ -33,7 +31,6 @@
       <div class="field"><label for="reg-email">Correo electrónico</label><input type="email" id="reg-email" name="email" placeholder="nombre@correo.com" autocomplete="email" required></div>
       <div class="field"><label for="reg-password">Contraseña</label><input type="password" id="reg-password" name="new-password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" minlength="8" required></div>
       <button type="submit" class="btn btn-accent btn-full">Crear cuenta</button>
-      <p id="register-message" class="form-note" role="status" aria-live="polite">Modo demostración: el registro no crea una cuenta real ni guarda datos.</p>
     </form>
   </section>
   <p class="auth-footer">¿Aún no tienes cuenta? <button type="button" class="text-button" id="switch-register">Regístrate aquí</button></p>

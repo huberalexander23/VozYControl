@@ -174,8 +174,8 @@ details.service-card { display: block; padding: 0; }
   --navy: #204e65;
   --navy-deep: #e0edf2;
   --teal: #8ac8d4;
-  --orange: #e17a56;
-  --orange-dark: #c45b39;
+  --orange: #b84b2b;
+  --orange-dark: #9f3d1e;
   --ink: #e6eef1;
   --muted: #b7c4c9;
   --paper: #111a20;
@@ -252,3 +252,13 @@ details.service-card { display: block; padding: 0; }
 :root[data-theme="dark"] .auth-brand .theme-toggle,
 :root[data-theme="dark"] .subpage-header .theme-toggle { color: #e4f0f3; border-color: #71858d; background: #24343d; }
 :root[data-theme="dark"] .topbar .theme-toggle { color: white; }
+
+:root[data-theme="dark"] .helper-link,
+:root[data-theme="dark"] .back-home,
+:root[data-theme="dark"] .back-link,
+:root[data-theme="dark"] .new-report-link,
+:root[data-theme="dark"] .service-detail a,
+:root[data-theme="dark"] .text-button,
+:root[data-theme="dark"] .profile-detail span { color: #a9d9e5; }
+:root[data-theme="dark"] .btn-accent,
+:root[data-theme="dark"] .btn { color: #fff; }

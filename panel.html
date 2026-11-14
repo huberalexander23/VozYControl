@@ -20,15 +20,15 @@
 <main id="main" class="page-pad dashboard-page">
   <section aria-label="Resumen de reportes">
     <div class="stat-row">
-      <article class="stat-card"><div class="stat-value accent">3</div><div class="stat-label">Reportes activos</div></article>
-      <article class="stat-card"><div class="stat-value success">7</div><div class="stat-label">Resueltos</div></article>
+      <article class="stat-card"><div class="stat-value accent" id="active-count">0</div><div class="stat-label">Reportes activos</div></article>
+      <article class="stat-card"><div class="stat-value success" id="resolved-count">0</div><div class="stat-label">Resueltos</div></article>
     </div>
   </section>
   <div class="section-heading-row">
     <h2 class="section-title">Mis reportes</h2>
     <a href="reportar.html" class="new-report-link">＋ Nuevo reporte</a>
   </div>
-  <section aria-label="Lista de reportes" class="report-list">
+  <section aria-label="Lista de reportes" class="report-list" id="report-list"><p class="service-desc">Cargando reportes...</p></section>
     <article class="report-row"><div><h3 class="report-title">Corte de agua sin aviso</h3><p class="report-date">20 sep · Agua</p></div><span class="badge badge-progress">En curso</span></article>
     <article class="report-row"><div><h3 class="report-title">Falta de insumos en centro de salud</h3><p class="report-date">15 sep · Salud</p></div><span class="badge badge-pending">Pendiente</span></article>
     <article class="report-row"><div><h3 class="report-title">Colegio sin cupo asignado</h3><p class="report-date">2 sep · Educación</p></div><span class="badge badge-done">Resuelto</span></article>

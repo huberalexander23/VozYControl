@@ -99,6 +99,16 @@ document.addEventListener("DOMContentLoaded", () => {
     field?.addEventListener("input", () => { if (field.value.trim()) setFieldError(field, ""); });
     field?.addEventListener("change", () => { if (field.value.trim()) setFieldError(field, ""); });
   });
+  // Formularios de acceso: no simular autenticación sin un backend conectado.
+  ["login-form", "register-form"].forEach((formId) => {
+    const form = document.getElementById(formId);
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const status = form.querySelector('[role="status"]');
+      if (status) status.textContent = "Esta demostración todavía no está conectada a un servicio de autenticación.";
+    });
+  });
+
   reportForm?.addEventListener("submit", (event) => {
     event.preventDefault();
     let firstInvalid = null;
@@ -110,13 +120,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     if (firstInvalid) { firstInvalid.focus(); return; }
 
-    // Prototipo sin backend: muestra confirmación local, no persiste información.
-    reportForm.hidden = true;
-    if (successPanel) {
-      successPanel.hidden = false;
-      successPanel.setAttribute("tabindex", "-1");
-      successPanel.focus();
-    }
+    // No se informa un envío exitoso: no existe un servidor para guardar reportes.
+    const status = document.querySelector("#report-form-status");
+    if (status) status.textContent = "Validación completada. Este prototipo no envía ni guarda reportes.";
   });
 
   // Ayuda consistente: enlaces de salto enfocan el contenido de destino.

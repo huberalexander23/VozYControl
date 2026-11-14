@@ -16,7 +16,6 @@
   <span aria-hidden="true"></span>
 </header>
 <main id="main" class="page-pad report-page">
-  <p class="form-intro">Cuéntanos qué sucedió con el servicio público. Los campos marcados con * son obligatorios.</p>
   <form id="report-form" novalidate>
     <div class="field"><label for="categoria">Categoría del servicio <span aria-hidden="true">*</span><span class="visually-hidden"> (obligatorio)</span></label>
       <select id="categoria" name="categoria" required aria-describedby="categoria-error"><option value="">Selecciona una categoría</option><option>Agua potable</option><option>Salud</option><option>Educación</option><option>Energía</option></select>
@@ -32,22 +31,18 @@
     </div>
     <fieldset class="evidence-field">
       <legend>Evidencia (foto o documento)</legend>
-      <p class="service-desc">Adjunta una imagen o PDF que ayude a explicar el caso. Es opcional.</p>
       <label class="file-drop" for="evidencia">
         <span class="upload-icon" aria-hidden="true">↑</span>
         <span class="file-drop-label">Adjuntar archivo</span>
         <span class="file-drop-name" id="file-name" aria-live="polite">Ningún archivo seleccionado</span>
       </label>
-      <input type="file" id="evidencia" name="evidencia" accept="image/*,.pdf" aria-describedby="file-help">
-      <p id="file-help" class="service-desc">Formatos permitidos: imágenes y PDF.</p>
+      <input type="file" id="evidencia" name="evidencia" accept="image/*,.pdf">
     </fieldset>
     <button type="submit" class="btn btn-accent btn-full">Preparar reporte</button>
-    <p id="report-form-status" class="form-note" role="status" aria-live="polite">Tu reporte se revisará antes de publicarse. Esta versión es una demostración.</p>
   </form>
   <section class="success-panel" id="success-panel" aria-labelledby="success-title" tabindex="-1" hidden>
     <div class="success-icon" aria-hidden="true">✓</div>
     <h2 id="success-title">Reporte preparado</h2>
-    <p>La información pasó la validación. En esta versión de demostración no se envía ni se guarda en una base de datos.</p>
     <a href="panel.html" class="btn btn-secondary">Volver al panel</a>
   </section>
 </main>

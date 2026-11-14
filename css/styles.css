@@ -248,7 +248,7 @@ details.service-card { display: block; padding: 0; }
 .auth-brand, .dashboard-header-inner, .subpage-header { position: relative; }
 .auth-brand .theme-toggle { position: absolute; top: 22px; right: 14px; color: var(--navy); border-color: var(--line); background: var(--white); }
 .dashboard-header-inner .theme-toggle { position: absolute; top: 16px; right: 76px; }
-.subpage-header .theme-toggle { justify-self: end; color: var(--navy); border-color: var(--line); background: var(--white); }
+.subpage-header .theme-toggle { position: absolute; top: 10px; right: 10px; color: var(--navy); border-color: var(--line); background: var(--white); }
 :root[data-theme="dark"] .auth-brand .theme-toggle,
 :root[data-theme="dark"] .subpage-header .theme-toggle { color: #e4f0f3; border-color: #71858d; background: #24343d; }
 :root[data-theme="dark"] .topbar .theme-toggle { color: white; }

@@ -140,6 +140,61 @@ document.addEventListener("DOMContentLoaded", () => {
     if (nameTarget && demoName) nameTarget.textContent = demoName;
   });
 
+  const reportList = document.querySelector("#report-list");
+  if (reportList) {
+    fetch("/api/reportes")
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message || "No se pudieron cargar los reportes.");
+        return result.reports || [];
+      })
+      .then((reports) => {
+        const active = reports.filter((report) => report.status !== "Resuelto").length;
+        const resolved = reports.filter((report) => report.status === "Resuelto").length;
+        const activeCount = document.querySelector("#active-count");
+        const resolvedCount = document.querySelector("#resolved-count");
+        if (activeCount) activeCount.textContent = active;
+        if (resolvedCount) resolvedCount.textContent = resolved;
+        reportList.replaceChildren();
+
+        if (!reports.length) {
+          const empty = document.createElement("p");
+          empty.className = "service-desc";
+          empty.textContent = "Todavía no hay reportes registrados.";
+          reportList.append(empty);
+          return;
+        }
+
+        reports.forEach((report) => {
+          const row = document.createElement("article");
+          row.className = "report-row";
+          const content = document.createElement("div");
+          const title = document.createElement("h3");
+          title.className = "report-title";
+          title.textContent = report.description.length > 82
+            ? `${report.description.slice(0, 79)}...`
+            : report.description;
+          const date = document.createElement("p");
+          date.className = "report-date";
+          const created = report.createdAt ? new Date(report.createdAt).toLocaleDateString("es-CO") : "";
+          date.textContent = [created, report.category, report.location].filter(Boolean).join(" · ");
+          content.append(title, date);
+          const badge = document.createElement("span");
+          badge.className = "badge " + (report.status === "Resuelto" ? "badge-done" : report.status === "En curso" ? "badge-progress" : "badge-pending");
+          badge.textContent = report.status || "Pendiente";
+          row.append(content, badge);
+          reportList.append(row);
+        });
+      })
+      .catch((error) => {
+        reportList.replaceChildren();
+        const message = document.createElement("p");
+        message.className = "service-desc";
+        message.textContent = error.message;
+        reportList.append(message);
+      });
+  }
+
   const reportForm = document.querySelector("#report-form");
   const successPanel = document.querySelector("#success-panel");
   const reportStatus = document.querySelector("#report-status");

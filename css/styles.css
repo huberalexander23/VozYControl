@@ -262,3 +262,120 @@ details.service-card { display: block; padding: 0; }
 :root[data-theme="dark"] .profile-detail span { color: #a9d9e5; }
 :root[data-theme="dark"] .btn-accent,
 :root[data-theme="dark"] .btn { color: #fff; }
+
+
+/* Diseño desktop-first: aprovecha pantallas amplias sin perder adaptación móvil. */
+@media (min-width: 900px) {
+  body { min-width: 320px; }
+  .app-shell {
+    width: 100%;
+    max-width: 1440px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding-bottom: 82px;
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: none;
+  }
+  .topbar-inner {
+    width: min(100% - 64px, 1200px);
+    min-height: 76px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+  .brand { font-size: 23px; }
+  .header-icon-link { width: 46px; height: 46px; }
+  .page-pad {
+    width: min(100% - 64px, 1120px);
+    margin-inline: auto;
+    padding: 38px 0 44px;
+  }
+  .page-title { font-size: 32px; margin-bottom: 8px; }
+  .intro-copy { font-size: 16px; margin-bottom: 24px; }
+  .search-box { max-width: 760px; min-height: 56px; }
+  .chip-row { margin: 22px 0 30px; gap: 12px; }
+  .chip { min-height: 42px; padding-inline: 20px; font-size: 14px; }
+  .section-title { font-size: 21px; margin-bottom: 15px; }
+  #service-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  details.service-card { margin: 0; min-height: 92px; }
+  .service-summary { min-height: 90px; padding: 17px; gap: 16px; }
+  .service-icon { width: 50px; height: 50px; flex-basis: 50px; font-size: 24px; }
+  .service-name { font-size: 16px; }
+  .service-desc { font-size: 13px; }
+  .service-detail { padding: 0 20px 18px 83px; font-size: 13px; }
+  .info-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 30px;
+    padding: 22px 26px;
+  }
+  .info-banner p { flex: 1; margin: 0; font-size: 14px; }
+  .info-banner .btn { flex: 0 0 auto; }
+  .tabbar {
+    left: 50%;
+    bottom: 0;
+    width: min(100%, 1440px);
+    min-height: 68px;
+    padding: 0 max(32px, calc((100% - 1120px) / 2));
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    gap: 16px;
+    transform: translateX(-50%);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -5px 20px rgba(20,45,55,.06);
+  }
+  .tab {
+    min-height: 68px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 9px;
+    font-size: 14px;
+  }
+  .tab span { font-size: 22px; }
+  .auth-brand { padding: 34px 32px 18px; }
+  .brand-dark { font-size: 27px; }
+  .auth-page { width: min(100% - 64px, 600px); padding-top: 24px; }
+  .auth-title { font-size: 30px; }
+  .auth-panel { padding: 28px; }
+  .dashboard-header-inner {
+    width: min(100% - 64px, 1120px);
+    margin-inline: auto;
+    padding: 30px 0;
+  }
+  .dashboard-name { font-size: 28px; }
+  .dashboard-page { padding-top: 34px; }
+  .stat-row { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+  .stat-card { padding: 22px 18px; }
+  .stat-value { font-size: 34px; }
+  .dashboard-page .section-heading-row { margin-top: 34px; }
+  .report-row { padding: 17px 20px; }
+  .report-title { font-size: 15px; }
+  .subpage-header { min-height: 72px; padding-inline: max(32px, calc((100% - 1120px) / 2)); }
+  .subpage-header h1 { font-size: 20px; }
+  .report-page { width: min(100% - 64px, 820px); padding-top: 32px; }
+  .form-intro { font-size: 15px; }
+  .report-page .field label, .evidence-field legend { font-size: 14px; }
+  .field input:not([type="file"]), .field select { min-height: 50px; }
+  .field textarea { min-height: 150px; }
+  .profile-summary { padding: 28px 0 34px; }
+  .profile-avatar { width: 88px; height: 88px; font-size: 27px; }
+  .profile-summary h2 { font-size: 24px; }
+  .profile-details { padding: 24px; }
+  .profile-detail { display: grid; grid-template-columns: 220px 1fr; align-items: center; padding: 15px 0; }
+  .profile-detail span { font-size: 14px; }
+  .profile-detail strong { font-size: 15px; }
+}
+
+@media (min-width: 1200px) {
+  #service-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .page-pad { padding-top: 46px; }
+}
+
+@media (max-width: 899px) {
+  .app-shell { width: 100%; max-width: 520px; }
+}

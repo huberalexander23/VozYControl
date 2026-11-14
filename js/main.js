@@ -1,4 +1,3 @@
-/* VozYControl — filtros, navegación accesible y validación del prototipo. */
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {

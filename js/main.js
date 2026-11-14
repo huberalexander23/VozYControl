@@ -2,7 +2,6 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Tema claro/oscuro persistente, disponible en todas las pantallas.
   const savedTheme = localStorage.getItem("vozycontrol-theme");
   if (savedTheme === "dark" || savedTheme === "light") {
     document.documentElement.dataset.theme = savedTheme;

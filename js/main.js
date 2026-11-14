@@ -142,11 +142,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const reportForm = document.querySelector("#report-form");
   const successPanel = document.querySelector("#success-panel");
+  const reportStatus = document.querySelector("#report-status");
   const requiredFields = [
     { id: "categoria", message: "Selecciona una categoría." },
     { id: "ubicacion", message: "Indica dónde ocurrió el hecho." },
     { id: "descripcion", message: "Describe brevemente lo ocurrido." }
   ];
+
   function setFieldError(field, message) {
     if (!field) return;
     const wrapper = field.closest(".field");
@@ -156,17 +158,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if (error) {
       error.textContent = message || "";
       error.hidden = !invalid;
-      if (error.id) field.setAttribute("aria-describedby", error.id);
     }
     wrapper?.classList.toggle("has-error", invalid);
   }
+
   requiredFields.forEach(({ id, message }) => {
     const field = document.getElementById(id);
     field?.addEventListener("blur", () => setFieldError(field, field.value.trim() ? "" : message));
-    field?.addEventListener("input", () => { if (field.value.trim()) setFieldError(field, ""); });
-    field?.addEventListener("change", () => { if (field.value.trim()) setFieldError(field, ""); });
+    field?.addEventListener("input", () => {
+      if (field.value.trim()) setFieldError(field, "");
+    });
+    field?.addEventListener("change", () => {
+      if (field.value.trim()) setFieldError(field, "");
+    });
   });
-  reportForm?.addEventListener("submit", (event) => {
+
+  reportForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
     let firstInvalid = null;
     requiredFields.forEach(({ id, message }) => {
@@ -175,11 +182,40 @@ document.addEventListener("DOMContentLoaded", () => {
       setFieldError(field, invalid ? message : "");
       if (invalid && !firstInvalid) firstInvalid = field;
     });
-    if (firstInvalid) { firstInvalid.focus(); return; }
-    reportForm.hidden = true;
-    if (successPanel) {
-      successPanel.hidden = false;
-      successPanel.focus();
+    if (firstInvalid) {
+      firstInvalid.focus();
+      return;
+    }
+
+    const submitButton = reportForm.querySelector('button[type="submit"]');
+    const formData = new FormData(reportForm);
+    formData.set("reporterName", sessionStorage.getItem("vozycontrol-demo-name") || "Usuario");
+    if (submitButton) submitButton.disabled = true;
+    if (reportStatus) {
+      reportStatus.hidden = false;
+      reportStatus.textContent = "Guardando reporte...";
+    }
+
+    try {
+      const response = await fetch("/api/reportes", { method: "POST", body: formData });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "No se pudo guardar el reporte.");
+
+      reportForm.hidden = true;
+      if (reportStatus) reportStatus.hidden = true;
+      if (successPanel) {
+        successPanel.hidden = false;
+        const message = successPanel.querySelector("#success-message");
+        if (message) message.textContent = `Tu reporte quedó guardado. Número de registro: ${result.report._id}.`;
+        successPanel.focus();
+      }
+    } catch (error) {
+      if (reportStatus) {
+        reportStatus.hidden = false;
+        reportStatus.textContent = error.message || "No fue posible guardar el reporte. Intenta nuevamente.";
+      }
+    } finally {
+      if (submitButton) submitButton.disabled = false;
     }
   });
 

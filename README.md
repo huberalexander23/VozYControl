@@ -12,7 +12,7 @@ La interfaz se ajustó tomando como referencia la sección **5.1 Prototipos de P
 - **Nuevo reporte:** categoría, ubicación, descripción y carga opcional de evidencia en imagen o PDF.
 - **Perfil:** vista básica de los datos del usuario de demostración.
 
-La navegación principal permite ir a Inicio, Buscar, Reportar y Perfil. El diseño usa una composición estrecha y adaptable para conservar la apariencia de la propuesta móvil.
+La navegación principal permite ir a Inicio, Buscar, Reportar y Perfil. El diseño usa una composición estrecha y adaptable para conservar la apariencia de la propuesta móvil. El selector «Oscuro/Claro» está disponible en las pantallas y recuerda la elección en el navegador.
 
 ## Accesibilidad web — WCAG 2.2
 
@@ -39,8 +39,8 @@ Se incorporaron mejoras de accesibilidad basadas en la guía de clase:
 - `panel.html`: resumen y seguimiento ilustrativo de reportes.
 - `reportar.html`: formulario y validación de un reporte.
 - `perfil.html`: perfil de demostración.
-- `css/styles.css`: estilos adaptables y accesibles.
-- `js/main.js`: filtros, pestañas, validación y navegación de demostración.
+- `css/styles.css`: estilos adaptables, accesibilidad y paletas clara/oscura.
+- `js/main.js`: filtros, pestañas, validación, selector de tema y navegación de demostración.
 
 ## Alcance actual
 

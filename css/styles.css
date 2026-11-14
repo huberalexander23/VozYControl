@@ -154,3 +154,16 @@ a, button, input, select, textarea { scroll-margin-block: 90px; }
 .profile-detail span { color: var(--muted); font-size: 12px; }
 .profile-detail strong { color: var(--ink); font-size: 14px; }
 .profile-details + .prototype-note { margin: 14px 0 18px; }
+
+/* Despliegue de requisitos por servicio, según la lista de características. */
+details.service-card { display: block; padding: 0; }
+.service-summary { display: flex; align-items: center; gap: 12px; min-height: 76px; padding: 12px; cursor: pointer; list-style: none; }
+.service-summary::-webkit-details-marker { display: none; }
+.service-summary .service-copy { flex: 1; min-width: 0; }
+.service-detail { padding: 0 14px 14px 66px; color: var(--muted); font-size: 12px; }
+.service-detail p { margin: 5px 0 8px; }
+.service-detail a { font-weight: 700; }
+.service-card[open] .card-chevron { transform: rotate(90deg); }
+@media (min-width: 700px) {
+  .tabbar { left: 50%; transform: translateX(-50%); }
+}

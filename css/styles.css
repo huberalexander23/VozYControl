@@ -145,3 +145,12 @@ a, button, input, select, textarea { scroll-margin-block: 90px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+.profile-summary { padding: 16px 0 24px; text-align: center; }
+.profile-avatar { display: grid; place-items: center; width: 70px; height: 70px; margin: 0 auto 12px; border-radius: 50%; color: white; background: var(--navy); font-size: 22px; font-weight: 800; }
+.profile-summary h2 { margin: 0; color: var(--navy-deep); font-size: 19px; }
+.profile-details { padding: 17px; border: 1px solid var(--line); border-radius: 11px; background: white; }
+.profile-details .section-title { margin-bottom: 12px; }
+.profile-detail { display: flex; flex-direction: column; gap: 3px; padding: 10px 0; border-top: 1px solid var(--line); }
+.profile-detail span { color: var(--muted); font-size: 12px; }
+.profile-detail strong { color: var(--ink); font-size: 14px; }
+.profile-details + .prototype-note { margin: 14px 0 18px; }

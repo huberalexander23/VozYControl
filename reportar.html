@@ -16,7 +16,7 @@
   <span aria-hidden="true"></span>
 </header>
 <main id="main" class="page-pad report-page">
-  <form id="report-form" novalidate>
+  <form id="report-form" novalidate enctype="multipart/form-data">
     <div class="field"><label for="categoria">Categoría del servicio <span aria-hidden="true">*</span><span class="visually-hidden"> (obligatorio)</span></label>
       <select id="categoria" name="categoria" required aria-describedby="categoria-error"><option value="">Selecciona una categoría</option><option>Agua potable</option><option>Salud</option><option>Educación</option><option>Energía</option></select>
       <p class="field-error" id="categoria-error" hidden>Selecciona una categoría.</p>
@@ -38,11 +38,13 @@
       </label>
       <input type="file" id="evidencia" name="evidencia" accept="image/*,.pdf">
     </fieldset>
-    <button type="submit" class="btn btn-accent btn-full">Preparar reporte</button>
+    <button type="submit" class="btn btn-accent btn-full">Enviar reporte</button>
+    <p id="report-status" class="form-note" role="status" aria-live="polite" hidden></p>
   </form>
   <section class="success-panel" id="success-panel" aria-labelledby="success-title" tabindex="-1" hidden>
     <div class="success-icon" aria-hidden="true">✓</div>
-    <h2 id="success-title">Reporte preparado</h2>
+    <h2 id="success-title">Reporte guardado</h2>
+    <p id="success-message"></p>
     <a href="panel.html" class="btn btn-secondary">Volver al panel</a>
   </section>
 </main>

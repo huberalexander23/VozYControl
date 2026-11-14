@@ -1,8 +1,7 @@
-/* VozYControl - mejoras de accesibilidad WCAG 2.2 */
+/* VozYControl — filtros, navegación accesible y validación del prototipo. */
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Búsqueda y filtros por categoría (A: información perceptible y operable).
   const searchInput = document.querySelector("#search");
   const categoryButtons = [...document.querySelectorAll("[data-category]")];
   const serviceCards = [...document.querySelectorAll(".service-card")];
@@ -38,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }));
   filterServices();
 
-  // Pestañas del acceso: flechas, Inicio y Fin (A: teclado; AA: foco visible).
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   const panels = [...document.querySelectorAll('[role="tabpanel"]')];
   function activateTab(tab, moveFocus = false) {
@@ -63,16 +61,55 @@ document.addEventListener("DOMContentLoaded", () => {
       activateTab(tabs[next], true);
     });
   });
-  if (tabs.length) activateTab(tabs.find((tab) => tab.getAttribute("aria-selected") === "true") || tabs[0]);
+  if (tabs.length) {
+    activateTab(tabs.find((tab) => tab.getAttribute("aria-selected") === "true") || tabs[0]);
+  }
+  document.querySelector("#switch-register")?.addEventListener("click", () => {
+    const registerTab = document.querySelector("#tab-register");
+    if (registerTab) { activateTab(registerTab, true); }
+  });
 
-  // Mensajes comprensibles al seleccionar evidencia.
   const fileInput = document.querySelector("#evidencia");
   const fileName = document.querySelector("#file-name");
   fileInput?.addEventListener("change", () => {
     fileName.textContent = fileInput.files?.[0]?.name || "Ningún archivo seleccionado";
   });
 
-  // Validación de formulario: errores asociados al campo y anunciables.
+  function validateAccessForm(form) {
+    const controls = [...form.querySelectorAll("input[required]")];
+    let firstInvalid = null;
+    controls.forEach((field) => {
+      const valid = field.checkValidity();
+      field.setAttribute("aria-invalid", String(!valid));
+      if (!valid && !firstInvalid) firstInvalid = field;
+    });
+    if (firstInvalid) {
+      firstInvalid.focus();
+      const status = form.querySelector('[role="status"]');
+      if (status) status.textContent = "Revisa los campos: completa la información y utiliza un correo válido.";
+      return false;
+    }
+    return true;
+  }
+
+  ["login-form", "register-form"].forEach((formId) => {
+    const form = document.getElementById(formId);
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!validateAccessForm(form)) return;
+      const name = form.querySelector('[name="name"]')?.value.trim();
+      if (name) sessionStorage.setItem("vozycontrol-demo-name", name);
+      else if (!sessionStorage.getItem("vozycontrol-demo-name")) sessionStorage.setItem("vozycontrol-demo-name", "María Fernández");
+      const status = form.querySelector('[role="status"]');
+      if (status) status.textContent = "Datos revisados para la demostración. Abriendo el panel de ejemplo; no se creó una cuenta ni se inició sesión real.";
+      window.location.href = "panel.html";
+    });
+  });
+
+  const dashboardName = document.querySelector("#dashboard-name");
+  const demoName = sessionStorage.getItem("vozycontrol-demo-name");
+  if (dashboardName && demoName) dashboardName.textContent = demoName;
+
   const reportForm = document.querySelector("#report-form");
   const successPanel = document.querySelector("#success-panel");
   const requiredFields = [
@@ -99,16 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
     field?.addEventListener("input", () => { if (field.value.trim()) setFieldError(field, ""); });
     field?.addEventListener("change", () => { if (field.value.trim()) setFieldError(field, ""); });
   });
-  // Formularios de acceso: no simular autenticación sin un backend conectado.
-  ["login-form", "register-form"].forEach((formId) => {
-    const form = document.getElementById(formId);
-    form?.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const status = form.querySelector('[role="status"]');
-      if (status) status.textContent = "Esta demostración todavía no está conectada a un servicio de autenticación.";
-    });
-  });
-
   reportForm?.addEventListener("submit", (event) => {
     event.preventDefault();
     let firstInvalid = null;
@@ -119,13 +146,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (invalid && !firstInvalid) firstInvalid = field;
     });
     if (firstInvalid) { firstInvalid.focus(); return; }
-
-    // No se informa un envío exitoso: no existe un servidor para guardar reportes.
-    const status = document.querySelector("#report-form-status");
-    if (status) status.textContent = "Validación completada. Este prototipo no envía ni guarda reportes.";
+    reportForm.hidden = true;
+    if (successPanel) {
+      successPanel.hidden = false;
+      successPanel.focus();
+    }
   });
 
-  // Ayuda consistente: enlaces de salto enfocan el contenido de destino.
   document.querySelectorAll(".skip-link").forEach((link) => {
     link.addEventListener("click", () => {
       const target = document.querySelector(link.getAttribute("href"));

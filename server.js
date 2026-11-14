@@ -30,7 +30,7 @@ const reportSchema = new mongoose.Schema({
   evidence: { type: evidenceSchema, default: null }
 }, { timestamps: true, collection: "reportes" });
 
-reportSchema.index({ createdAt: -1 });
+reportSchema.index({ createdAt: -1 }, { name: "reportes_fecha_creacion" });
 const Report = mongoose.models.Reporte || mongoose.model("Reporte", reportSchema);
 
 const upload = multer({

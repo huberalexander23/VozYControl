@@ -1,6 +1,6 @@
 {
   "name": "voz-y-control",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Plataforma ciudadana VozYControl con API Express y MongoDB Atlas",
   "main": "server.js",

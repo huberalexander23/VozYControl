@@ -2,6 +2,32 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Tema claro/oscuro persistente, disponible en todas las pantallas.
+  const savedTheme = localStorage.getItem("vozycontrol-theme");
+  if (savedTheme === "dark" || savedTheme === "light") {
+    document.documentElement.dataset.theme = savedTheme;
+  }
+  const themeHost = document.querySelector(
+    ".topbar-inner, .auth-brand, .dashboard-header-inner, .subpage-header"
+  );
+  if (themeHost) {
+    const themeButton = document.createElement("button");
+    themeButton.type = "button";
+    themeButton.className = "theme-toggle";
+    themeButton.setAttribute("aria-pressed", String(document.documentElement.dataset.theme === "dark"));
+    themeButton.setAttribute("aria-label", document.documentElement.dataset.theme === "dark" ? "Activar modo claro" : "Activar modo oscuro");
+    themeButton.textContent = document.documentElement.dataset.theme === "dark" ? "☀ Claro" : "☾ Oscuro";
+    themeHost.append(themeButton);
+    themeButton.addEventListener("click", () => {
+      const isDark = document.documentElement.dataset.theme !== "dark";
+      document.documentElement.dataset.theme = isDark ? "dark" : "light";
+      localStorage.setItem("vozycontrol-theme", isDark ? "dark" : "light");
+      themeButton.setAttribute("aria-pressed", String(isDark));
+      themeButton.setAttribute("aria-label", isDark ? "Activar modo claro" : "Activar modo oscuro");
+      themeButton.textContent = isDark ? "☀ Claro" : "☾ Oscuro";
+    });
+  }
+
   const searchInput = document.querySelector("#search");
   const categoryButtons = [...document.querySelectorAll("[data-category]")];
   const serviceCards = [...document.querySelectorAll(".service-card")];

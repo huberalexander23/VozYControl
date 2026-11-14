@@ -58,12 +58,13 @@ Cada documento de `reportes` contiene:
 
    ```bash
    npm install
+   npm audit
    npm run dev
    ```
 
 8. En Codespaces, abre la pestaña **Ports**, localiza el puerto **3000** y selecciona **Open in Browser**.
 
-El archivo `.env` está excluido por `.gitignore`. **No subas contraseñas ni cadenas privadas de conexión a GitHub.** El archivo `.env.example` contiene únicamente una plantilla.
+El archivo `.env` está excluido por `.gitignore`. **No subas contraseñas ni cadenas privadas de conexión a GitHub.** El archivo `.env.example` contiene únicamente una plantilla. Conserva también `package-lock.json` en Git para fijar las versiones instaladas. Si `npm audit` reporta vulnerabilidades, ejecuta primero `npm audit fix` y revisa el resultado; evita `npm audit fix --force` sin analizar cambios mayores.
 
 ## API REST
 

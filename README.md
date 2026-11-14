@@ -48,6 +48,6 @@ Este repositorio sigue siendo un **prototipo frontend**. Los datos del panel son
 
 ## Referencias
 
-- [Propuesta de Proyecto VozYControl](./Propuesta%20de%20Proyecto%20VozYControl.pdf) (documento entregado para el diseño).
+- Propuesta de Proyecto VozYControl (documento de referencia del equipo; no forma parte de los archivos del repositorio).
 - [Guía de clase: WCAG 2.2](https://github.com/dfloaizab/WebProgramming/blob/main/2025A/Unidad3/Accesibility/readme.md)
 - [W3C — WCAG 2.2 Quick Reference](https://www.w3.org/WAI/WCAG22/quickref/)

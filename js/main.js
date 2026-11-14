@@ -106,9 +106,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  const dashboardName = document.querySelector("#dashboard-name");
   const demoName = sessionStorage.getItem("vozycontrol-demo-name");
-  if (dashboardName && demoName) dashboardName.textContent = demoName;
+  ["#dashboard-name", "#profile-name"].forEach((selector) => {
+    const nameTarget = document.querySelector(selector);
+    if (nameTarget && demoName) nameTarget.textContent = demoName;
+  });
 
   const reportForm = document.querySelector("#report-form");
   const successPanel = document.querySelector("#success-panel");

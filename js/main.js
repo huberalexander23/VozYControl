@@ -26,6 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const searchForm = document.querySelector("#service-search");
+  searchForm?.addEventListener("submit", (event) => event.preventDefault());
   const searchInput = document.querySelector("#search");
   const categoryButtons = [...document.querySelectorAll("[data-category]")];
   const serviceCards = [...document.querySelectorAll(".service-card")];

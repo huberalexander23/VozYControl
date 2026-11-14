@@ -3,60 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Envía un reporte de una falla o negación de servicio público.">
+<meta name="description" content="Prepara un reporte ciudadano de fallas o negación de servicios públicos.">
 <title>VozYControl — Nuevo reporte</title>
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Saltar al contenido principal</a>
-<header class="topbar">
-  <div class="container topbar-inner">
-    <a href="panel.html" class="topbar-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Panel</a>
-    <span class="brand" style="font-size:15px">Nuevo reporte</span>
-  </div>
+<div class="app-shell">
+<header class="subpage-header">
+  <a href="panel.html" class="back-link">← Panel</a>
+  <h1>Nuevo reporte</h1>
+  <span aria-hidden="true"></span>
 </header>
-<main id="main">
-  <div class="container page-pad">
-    <form id="report-form" novalidate>
-      <p class="form-intro">Denuncia una falla o negación de servicio. Adjunta evidencia siempre que puedas.</p>
-      <div class="field" id="field-categoria"><label for="categoria">Categoría del servicio <span aria-hidden="true">*</span><span class="visually-hidden"> (obligatorio)</span></label>
-        <select id="categoria" name="categoria" required aria-describedby="categoria-error"><option value="">Selecciona una categoría</option><option>Agua potable</option><option>Salud</option><option>Educación</option><option>Energía</option></select>
-        <p class="field-error" id="categoria-error" hidden>Selecciona una categoría.</p>
-      </div>
-      <div class="field" id="field-ubicacion"><label for="ubicacion">Ubicación <span aria-hidden="true">*</span><span class="visually-hidden"> (obligatorio)</span></label>
-        <input type="text" id="ubicacion" name="ubicacion" placeholder="Barrio, dirección o punto de referencia" autocomplete="street-address" required aria-describedby="ubicacion-error">
-        <p class="field-error" id="ubicacion-error" hidden>Indica dónde ocurrió el hecho.</p>
-      </div>
-      <div class="field" id="field-descripcion"><label for="descripcion">Descripción del hecho <span aria-hidden="true">*</span><span class="visually-hidden"> (obligatorio)</span></label>
-        <textarea id="descripcion" name="descripcion" placeholder="Describe qué ocurrió, cuándo y quién te atendió..." required aria-describedby="descripcion-error"></textarea>
-        <p class="field-error" id="descripcion-error" hidden>Describe brevemente lo ocurrido.</p>
-      </div>
-      <div class="field"><label for="evidencia">Evidencia (foto o documento, opcional)</label>
-        <div class="file-drop"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 20h14"/></svg>
-          <span class="file-drop-label">Adjuntar archivo</span><p class="file-drop-name" id="file-name" aria-live="polite">Ningún archivo seleccionado</p>
-          <input type="file" id="evidencia" name="evidencia" accept="image/*,.pdf" aria-describedby="file-help">
-          <p id="file-help" class="service-desc">Formatos permitidos: imágenes y PDF.</p>
-        </div>
-      </div>
-      <button type="submit" class="btn btn-accent">Enviar reporte</button>
-      <p id="report-form-status" class="service-desc" role="status" aria-live="polite">Los campos con asterisco son obligatorios.</p>
-    </form>
-    <section class="success-panel" id="success-panel" aria-labelledby="success-title" tabindex="-1" hidden>
-      <div class="success-icon" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div>
-      <h1 id="success-title">Validación completada</h1>
-      <p>El formulario está completo. Este prototipo aún no guarda ni envía reportes a un servidor.</p>
-      <a href="panel.html" class="btn btn-secondary">Volver al panel</a>
-    </section>
-  </div>
+<main id="main" class="page-pad report-page">
+  <p class="form-intro">Cuéntanos qué sucedió con el servicio público. Los campos marcados con * son obligatorios.</p>
+  <form id="report-form" novalidate>
+    <div class="field"><label for="categoria">Categoría del servicio <span aria-hidden="true">*</span><span class="visually-hidden"> (obligatorio)</span></label>
+      <select id="categoria" name="categoria" required aria-describedby="categoria-error"><option value="">Selecciona una categoría</option><option>Agua potable</option><option>Salud</option><option>Educación</option><option>Energía</option></select>
+      <p class="field-error" id="categoria-error" hidden>Selecciona una categoría.</p>
+    </div>
+    <div class="field"><label for="ubicacion">Ubicación <span aria-hidden="true">*</span><span class="visually-hidden"> (obligatorio)</span></label>
+      <input type="text" id="ubicacion" name="ubicacion" placeholder="Barrio, dirección o punto de referencia" autocomplete="street-address" required aria-describedby="ubicacion-error">
+      <p class="field-error" id="ubicacion-error" hidden>Indica dónde ocurrió el hecho.</p>
+    </div>
+    <div class="field"><label for="descripcion">Descripción del hecho <span aria-hidden="true">*</span><span class="visually-hidden"> (obligatorio)</span></label>
+      <textarea id="descripcion" name="descripcion" placeholder="Describe qué ocurrió, cuándo y cómo te afectó..." required aria-describedby="descripcion-error"></textarea>
+      <p class="field-error" id="descripcion-error" hidden>Describe brevemente lo ocurrido.</p>
+    </div>
+    <fieldset class="evidence-field">
+      <legend>Evidencia (foto o documento)</legend>
+      <p class="service-desc">Adjunta una imagen o PDF que ayude a explicar el caso. Es opcional.</p>
+      <label class="file-drop" for="evidencia">
+        <span class="upload-icon" aria-hidden="true">↑</span>
+        <span class="file-drop-label">Adjuntar archivo</span>
+        <span class="file-drop-name" id="file-name" aria-live="polite">Ningún archivo seleccionado</span>
+      </label>
+      <input type="file" id="evidencia" name="evidencia" accept="image/*,.pdf" aria-describedby="file-help">
+      <p id="file-help" class="service-desc">Formatos permitidos: imágenes y PDF.</p>
+    </fieldset>
+    <button type="submit" class="btn btn-accent btn-full">Preparar reporte</button>
+    <p id="report-form-status" class="form-note" role="status" aria-live="polite">Tu reporte se revisará antes de publicarse. Esta versión es una demostración.</p>
+  </form>
+  <section class="success-panel" id="success-panel" aria-labelledby="success-title" tabindex="-1" hidden>
+    <div class="success-icon" aria-hidden="true">✓</div>
+    <h2 id="success-title">Reporte preparado</h2>
+    <p>La información pasó la validación. En esta versión de demostración no se envía ni se guarda en una base de datos.</p>
+    <a href="panel.html" class="btn btn-secondary">Volver al panel</a>
+  </section>
 </main>
-<nav class="tabbar" aria-label="Navegación global">
-  <div class="container">
-    <a href="panel.html" class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Inicio</a>
-    <span class="tab is-disabled" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Buscar (próximamente)</span>
-    <a href="reportar.html" class="tab" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Reportar</a>
-    <span class="tab is-disabled" aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>Perfil (próximamente)</span>
-  </div>
+<nav class="tabbar" aria-label="Navegación principal">
+  <a class="tab" href="panel.html"><span aria-hidden="true">⌂</span>Inicio</a>
+  <a class="tab" href="index.html"><span aria-hidden="true">⌕</span>Buscar</a>
+  <a class="tab" href="reportar.html" aria-current="page"><span aria-hidden="true">＋</span>Reportar</a>
+  <a class="tab" href="perfil.html"><span aria-hidden="true">♙</span>Perfil</a>
 </nav>
+</div>
 <script src="js/main.js" defer></script>
 </body>
 </html>

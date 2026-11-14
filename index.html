@@ -3,63 +3,88 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="VozYControl facilita consultar servicios públicos y reportar fallas.">
-<title>VozYControl — Inicio</title>
+<meta name="description" content="Consulta servicios públicos y conoce cómo exigir tus derechos con VozYControl.">
+<title>VozYControl — Servicios</title>
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Saltar al contenido principal</a>
+<div class="app-shell">
 <header class="topbar">
-  <div class="container topbar-inner">
+  <div class="topbar-inner">
     <a href="index.html" class="brand">VozYControl</a>
-    <nav aria-label="Navegación principal"><a href="login.html" class="btn-outline">Iniciar sesión</a></nav>
+    <a href="login.html" class="header-icon-link" aria-label="Iniciar sesión"><span aria-hidden="true">◉</span></a>
   </div>
 </header>
-<main id="main" class="no-tabbar">
-  <div class="container page-pad">
-    <div class="hero">
-      <h1>Encuentra y exige tus servicios públicos</h1>
-      <p>Busca requisitos, horarios y reporta fallas con evidencia.</p>
-    </div>
-    <form class="search-box" role="search" onsubmit="return false" style="margin-top:16px">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+<main id="main" class="page-pad">
+  <section aria-labelledby="page-title">
+    <h1 id="page-title" class="page-title">Encuentra un servicio</h1>
+    <p class="intro-copy">Consulta información pública cerca de ti.</p>
+    <form class="search-box" role="search" onsubmit="return false">
       <label for="search" class="visually-hidden">Buscar servicio o trámite</label>
+      <span aria-hidden="true">⌕</span>
       <input type="search" id="search" placeholder="Buscar servicio o trámite..." autocomplete="off">
     </form>
-    <div class="chip-row" role="group" aria-label="Filtrar por categoría">
-      <button class="chip is-active" type="button" aria-pressed="true" data-category="todos">Todos</button>
-      <button class="chip" type="button" aria-pressed="false" data-category="salud">Salud</button>
-      <button class="chip" type="button" aria-pressed="false" data-category="agua">Agua</button>
-      <button class="chip" type="button" aria-pressed="false" data-category="educacion">Educación</button>
-      <button class="chip" type="button" aria-pressed="false" data-category="energia">Energía</button>
-    </div>
-    <h2 class="section-title">Servicios cercanos</h2>
-    <div id="service-list" aria-live="polite" aria-atomic="false">
-      <article class="card service-card" data-category="salud">
-        <div class="service-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-7-10a7 7 0 0114 0c0 5.65-7 10-7 10z"/><circle cx="12" cy="11" r="2.5"/></svg></div>
-        <div><h3 class="service-name">Centro de Salud El Carmen</h3><p class="service-desc">Requisitos y horarios</p></div>
-      </article>
-      <article class="card service-card" data-category="agua">
-        <div class="service-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-7-10a7 7 0 0114 0c0 5.65-7 10-7 10z"/><circle cx="12" cy="11" r="2.5"/></svg></div>
-        <div><h3 class="service-name">Acueducto zona norte</h3><p class="service-desc">Reportar corte de agua</p></div>
-      </article>
-      <article class="card service-card" data-category="educacion">
-        <div class="service-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-7-10a7 7 0 0114 0c0 5.65-7 10-7 10z"/><circle cx="12" cy="11" r="2.5"/></svg></div>
-        <div><h3 class="service-name">Colegio Distrital Sur</h3><p class="service-desc">Matrículas 2027</p></div>
-      </article>
-      <article class="card service-card" data-category="energia">
-        <div class="service-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-7-10a7 7 0 0114 0c0 5.65-7 10-7 10z"/><circle cx="12" cy="11" r="2.5"/></svg></div>
-        <div><h3 class="service-name">Electrificadora regional</h3><p class="service-desc">Reportar apagones</p></div>
-      </article>
-    </div>
-    <p id="empty-state" class="service-desc" role="status" aria-live="polite" hidden>No se encontraron servicios.</p>
-    <div class="cta-banner">
-      <p>¿Una entidad te negó un servicio o notaste una falla? Inicia sesión para reportarlo con evidencia.</p>
-      <a href="login.html" class="btn btn-accent">Reportar ahora</a>
-    </div>
+  </section>
+  <div class="chip-row" role="group" aria-label="Filtrar por categoría">
+    <button class="chip is-active" type="button" aria-pressed="true" data-category="todos">Todos</button>
+    <button class="chip" type="button" aria-pressed="false" data-category="salud">Salud</button>
+    <button class="chip" type="button" aria-pressed="false" data-category="agua">Agua</button>
+    <button class="chip" type="button" aria-pressed="false" data-category="educacion">Educación</button>
+    <button class="chip" type="button" aria-pressed="false" data-category="energia">Energía</button>
   </div>
+  <div class="section-heading-row">
+    <h2 class="section-title">Servicios cercanos</h2>
+    <span class="subtle-label">Cali</span>
+  </div>
+  <div id="service-list" aria-live="polite" aria-atomic="false">
+    <details class="card service-card" data-category="salud">
+      <summary class="service-summary">
+        <span class="service-icon" aria-hidden="true">✚</span>
+        <span class="service-copy"><span class="service-name">Centro de Salud El Carmen</span><span class="service-desc">Requisitos y horarios</span></span>
+        <span class="card-chevron" aria-hidden="true">›</span>
+      </summary>
+      <div class="service-detail"><strong>Información y requisitos</strong><p>Consulta los requisitos, horarios de atención y canales oficiales de este servicio. Información ilustrativa del prototipo.</p><a href="login.html">Inicia sesión para preparar un reporte</a></div>
+    </details>
+    <details class="card service-card" data-category="agua">
+      <summary class="service-summary">
+        <span class="service-icon" aria-hidden="true">≈</span>
+        <span class="service-copy"><span class="service-name">Acueducto zona norte</span><span class="service-desc">Reportar corte de agua</span></span>
+        <span class="card-chevron" aria-hidden="true">›</span>
+      </summary>
+      <div class="service-detail"><strong>Información y requisitos</strong><p>Consulta los canales de atención, horarios y pasos para reportar una interrupción del servicio. Información ilustrativa del prototipo.</p><a href="login.html">Inicia sesión para preparar un reporte</a></div>
+    </details>
+    <details class="card service-card" data-category="educacion">
+      <summary class="service-summary">
+        <span class="service-icon" aria-hidden="true">▤</span>
+        <span class="service-copy"><span class="service-name">Colegio Distrital Sur</span><span class="service-desc">Matrículas y cupos</span></span>
+        <span class="card-chevron" aria-hidden="true">›</span>
+      </summary>
+      <div class="service-detail"><strong>Información y requisitos</strong><p>Consulta documentos requeridos y canales de orientación para matrícula y asignación de cupos. Información ilustrativa del prototipo.</p><a href="login.html">Inicia sesión para preparar un reporte</a></div>
+    </details>
+    <details class="card service-card" data-category="energia">
+      <summary class="service-summary">
+        <span class="service-icon" aria-hidden="true">ϟ</span>
+        <span class="service-copy"><span class="service-name">Electrificadora regional</span><span class="service-desc">Reportar apagones</span></span>
+        <span class="card-chevron" aria-hidden="true">›</span>
+      </summary>
+      <div class="service-detail"><strong>Información y requisitos</strong><p>Consulta canales de atención y pasos para reportar interrupciones o daños del alumbrado. Información ilustrativa del prototipo.</p><a href="login.html">Inicia sesión para preparar un reporte</a></div>
+    </details>
+  </div>
+  <p id="empty-state" class="service-desc empty-state" role="status" aria-live="polite" hidden>No se encontraron servicios.</p>
+  <aside class="info-banner">
+    <strong>¿Tienes un problema con un servicio?</strong>
+    <p>Regístrate o inicia sesión para preparar un reporte con evidencias.</p>
+    <a href="login.html" class="btn btn-accent">Iniciar sesión</a>
+  </aside>
 </main>
-<footer class="site-footer">VozYControl · BY Defenders · 2026</footer>
+<nav class="tabbar" aria-label="Navegación principal">
+  <a class="tab" href="index.html" aria-current="page"><span aria-hidden="true">⌂</span>Inicio</a>
+  <a class="tab" href="#search"><span aria-hidden="true">⌕</span>Buscar</a>
+  <a class="tab" href="login.html"><span aria-hidden="true">＋</span>Reportar</a>
+  <a class="tab" href="login.html"><span aria-hidden="true">♙</span>Perfil</a>
+</nav>
+</div>
 <script src="js/main.js" defer></script>
 </body>
 </html>

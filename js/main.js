@@ -132,6 +132,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  document.querySelectorAll("[data-demo-logout]").forEach((link) => {
+    link.addEventListener("click", () => sessionStorage.removeItem("vozycontrol-demo-name"));
+  });
+
   const demoName = sessionStorage.getItem("vozycontrol-demo-name");
   ["#dashboard-name", "#profile-name"].forEach((selector) => {
     const nameTarget = document.querySelector(selector);

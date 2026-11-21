@@ -115,10 +115,6 @@ La interfaz incorpora características orientadas a facilitar el uso de la plata
 - Diseño adaptable a computadores, tabletas y celulares.
 - Preferencia de movimiento reducido.
 - Alternancia entre modo claro y modo oscuro.
-
-Se tomaron como referencia criterios de accesibilidad WCAG 2.2 de niveles A, AA y AAA. La implementación de estas mejoras no representa una certificación de conformidad completa; esta requiere evaluaciones automáticas y pruebas manuales.
-
 ---
 
 **VozYControl — BY Defenders**  
-*Proyecto académico de la asignatura Programación Orientada a la Web · 2026B*

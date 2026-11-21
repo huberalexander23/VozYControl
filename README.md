@@ -82,8 +82,6 @@ El proceso contempla cuatro etapas:
 | 3 | Reportes ciudadanos de fallas o negación de servicios con evidencia | Huber Gonzalez | 14/11/2026 |
 | 4 | Panel administrativo y sistema de notificaciones | Sebastian Truque y Karol Bermudez | 28/11/2026 |
 
-*Las fechas corresponden a la planificación definida en la propuesta académica.*
-
 ---
 
 ## Diseño y navegación

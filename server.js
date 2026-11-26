@@ -10,7 +10,6 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const cors = require("cors");
 const passport = require("passport");
-const Usuario = require("./models/Usuario");
 const Report = require("./models/Reporte");
 const { verificarToken, permitirRoles } = require("./middlewares/auth.middleware");
 

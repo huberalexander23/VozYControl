@@ -154,6 +154,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const authError = new URLSearchParams(window.location.search).get("error");
   if (authError === "google" && loginForm) showAuthMessage(loginForm, "No se pudo iniciar sesión con Google. Verifica la configuración OAuth e inténtalo nuevamente.");
 
+  const publicHome = Boolean(document.querySelector("#service-list"));
+  if (publicHome) {
+    fetch("/api/auth/perfil", { credentials: "same-origin" })
+      .then(async (response) => response.ok ? (await response.json()).usuario : null)
+      .then((user) => {
+        if (!user) return;
+        const loginLink = document.querySelector(".header-icon-link");
+        if (loginLink) { loginLink.href = "panel.html"; loginLink.setAttribute("aria-label", "Ir a mi panel"); }
+        const banner = document.querySelector(".info-banner");
+        if (banner) {
+          const heading = banner.querySelector("strong");
+          const copy = banner.querySelector("p");
+          const action = banner.querySelector("a");
+          if (heading) heading.textContent = `Sesión iniciada como ${user.nombre}`;
+          if (copy) copy.textContent = user.rol === "admin" ? "Accede a tu panel para gestionar los reportes ciudadanos." : "Ya puedes consultar y gestionar tus reportes.";
+          if (action) { action.href = "panel.html"; action.textContent = user.rol === "admin" ? "Abrir administración" : "Mi panel"; }
+        }
+        const tabs = [...document.querySelectorAll(".tabbar .tab")];
+        if (tabs.length === 4) {
+          tabs[0].href = "panel.html";
+          tabs[2].href = "reportar.html";
+          tabs[3].href = "perfil.html";
+        }
+      })
+      .catch(() => {});
+  }
+
   const protectedPage = Boolean(document.querySelector("#report-list, #report-form, #profile-name"));
   const sessionPromise = protectedPage
     ? fetch("/api/auth/perfil", { credentials: "same-origin" })
@@ -168,6 +195,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const element = document.querySelector(selector);
             if (element) element.textContent = user.nombre;
           });
+          const reportsHeading = document.querySelector("#reports-heading");
+          if (reportsHeading && user.rol === "admin") reportsHeading.textContent = "Gestión de reportes";
           const emailElement = document.querySelector("#profile-email");
           if (emailElement) emailElement.textContent = user.email;
           const avatar = document.querySelector(".profile-avatar");
@@ -241,6 +270,46 @@ document.addEventListener("DOMContentLoaded", () => {
           badge.className = "badge " + (report.status === "Resuelto" ? "badge-done" : report.status === "En curso" ? "badge-progress" : "badge-pending");
           badge.textContent = report.status || "Pendiente";
           row.append(content, badge);
+
+          if (user.rol === "admin") {
+            const actions = document.createElement("div");
+            actions.className = "admin-report-actions";
+            const statusSelect = document.createElement("select");
+            statusSelect.setAttribute("aria-label", "Cambiar estado del reporte");
+            ["Pendiente", "En curso", "Resuelto"].forEach((status) => {
+              const option = document.createElement("option");
+              option.value = status;
+              option.textContent = status;
+              statusSelect.append(option);
+            });
+            statusSelect.value = report.status || "Pendiente";
+            const saveButton = document.createElement("button");
+            saveButton.type = "button";
+            saveButton.className = "btn btn-secondary";
+            saveButton.textContent = "Guardar estado";
+            saveButton.addEventListener("click", async () => {
+              saveButton.disabled = true;
+              try {
+                const response = await fetch(`/api/reportes/${encodeURIComponent(report._id)}/estado`, {
+                  method: "PATCH",
+                  credentials: "same-origin",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ status: statusSelect.value })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || "No se pudo actualizar el estado.");
+                badge.textContent = result.report.status;
+                badge.className = "badge " + (result.report.status === "Resuelto" ? "badge-done" : result.report.status === "En curso" ? "badge-progress" : "badge-pending");
+                saveButton.textContent = "Actualizado";
+              } catch (error) {
+                saveButton.textContent = error.message;
+              } finally {
+                saveButton.disabled = false;
+              }
+            });
+            actions.append(statusSelect, saveButton);
+            row.append(actions);
+          }
           reportList.append(row);
         });
       })

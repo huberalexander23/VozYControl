@@ -1,10 +1,10 @@
 # VozYControl
 
-## Plataforma de Defensa y Acceso a Servicios Sociales y Públicos
+## Plataforma ciudadana para el acceso a servicios públicos y el seguimiento de reportes
 
-**VozYControl** es una plataforma web que busca facilitar el acceso de la ciudadanía a información sobre derechos y servicios sociales y públicos. Su propósito es reunir información útil para que las personas puedan conocer los servicios disponibles, identificar sus requisitos y reportar posibles fallas, barreras o negaciones en su prestación.
+**VozYControl** es una aplicación web orientada a facilitar el acceso de la ciudadanía a información sobre servicios sociales y públicos, y a ofrecer un canal para registrar y hacer seguimiento a situaciones que afectan su prestación.
 
-La iniciativa también busca promover la participación ciudadana, la veeduría y la exigibilidad de derechos, ofreciendo un espacio para documentar situaciones que afectan a la comunidad y contribuir a su seguimiento.
+La plataforma permite consultar servicios por categoría, crear reportes sobre problemas identificados, adjuntar evidencias y revisar el estado de cada caso. Además, incorpora perfiles con distintos permisos para separar las funciones de los ciudadanos y del personal administrador.
 
 ---
 
@@ -26,110 +26,252 @@ La iniciativa también busca promover la participación ciudadana, la veeduría 
 
 ---
 
-## Problemática y justificación
+## Problemática y propósito
 
-El acceso a los servicios sociales y públicos puede verse limitado por la falta de información clara, la dificultad para conocer los procedimientos y requisitos institucionales y la ausencia de mecanismos sencillos para documentar y hacer seguimiento a las fallas en su prestación.
+La ciudadanía puede encontrar dificultades para conocer los servicios disponibles, entender los canales de atención y dejar constancia de fallas o inconvenientes relacionados con su prestación.
 
-VozYControl surge como una propuesta tecnológica para acercar la información a la ciudadanía y facilitar el registro de situaciones que puedan afectar el acceso a estos servicios. De esta manera, busca contribuir a una comunidad mejor informada, participativa y con mayores herramientas para ejercer sus derechos.
+VozYControl propone una herramienta digital que reúne información de referencia sobre servicios y permite documentar situaciones mediante reportes. Su propósito es promover una ciudadanía informada y facilitar el seguimiento de los casos registrados.
 
-## Objetivos
+## Funcionalidades implementadas
 
-### Objetivo general
+### Consulta de servicios
 
-Desarrollar una plataforma web que facilite el acceso ciudadano a información sobre servicios sociales y públicos y permita documentar situaciones que puedan afectar el ejercicio de los derechos.
+- Página principal con tarjetas informativas de servicios.
+- Búsqueda de servicios por texto.
+- Filtros por categoría: Todos, Salud, Agua, Educación y Energía.
+- Acceso a información descriptiva de cada servicio.
 
-### Objetivos específicos
+### Registro y autenticación
 
-- Democratizar el acceso a la información institucional.
-- Facilitar la búsqueda de servicios mediante categorías y ubicación.
-- Permitir la consulta de requisitos e información relevante para acceder a los servicios.
-- Fortalecer la veeduría y la exigibilidad ciudadana mediante reportes documentados.
-- Facilitar la gestión y el seguimiento de los casos registrados.
-- Proporcionar herramientas para consultar y administrar la información.
+- Creación de cuentas con nombre, correo y contraseña.
+- Inicio y cierre de sesión.
+- Contraseñas almacenadas mediante hash con bcrypt.
+- Autenticación basada en JSON Web Tokens (JWT).
+- Token de sesión almacenado en una cookie protegida `HttpOnly`.
+- Inicio de sesión con Google mediante Passport y OAuth 2.0, cuando se configuran las credenciales correspondientes.
+
+### Reportes ciudadanos
+
+- Creación de reportes asociados al usuario autenticado.
+- Selección de categoría, ubicación y descripción.
+- Adjuntar una evidencia opcional en formato JPG, PNG, WEBP o PDF.
+- Límite de tamaño de archivo de 5 MB.
+- Almacenamiento de los reportes en MongoDB Atlas.
+- Consulta de los reportes propios y visualización de su estado.
+
+### Panel y administración
+
+- Panel personal con resumen de reportes activos y resueltos.
+- Los ciudadanos solo pueden consultar sus propios reportes.
+- Los administradores pueden consultar todos los reportes.
+- Los administradores pueden cambiar el estado de un reporte entre **Pendiente**, **En curso** y **Resuelto**.
+- La API verifica el rol del usuario en el servidor antes de permitir cambios de estado; ocultar controles en la interfaz no sustituye esta validación.
+
+### Navegación y experiencia de usuario
+
+- Navegación entre Inicio, Buscar, Reportar y Perfil.
+- La navegación pública consulta la sesión activa para ofrecer acceso al panel sin pedir un nuevo inicio de sesión innecesario.
+- Alternancia entre modo claro y modo oscuro.
+- Diseño adaptable a distintos tamaños de pantalla.
+- Etiquetas y controles accesibles, mensajes de validación y navegación mediante teclado.
 
 ---
 
-## Funcionalidades principales
+## Roles y permisos
 
-| Módulo | Descripción |
+La aplicación maneja dos roles:
+
+| Rol | Permisos |
 |---|---|
-| Registro de usuarios | Crear cuentas para acceder a las funcionalidades de la plataforma. |
-| Buscador por categoría | Encontrar servicios según su área o tipo. |
-| Filtro por ubicación | Facilitar la búsqueda de servicios de acuerdo con la ubicación. |
-| Información de servicios | Consultar requisitos e información necesaria para acceder a cada servicio. |
-| Reportes ciudadanos | Registrar fallas o posibles negaciones de servicios y adjuntar evidencias. |
-| Panel administrativo | Consultar y gestionar la información y los reportes recibidos. |
-| Notificaciones | Informar sobre novedades relacionadas con los reportes y su seguimiento. |
-| Preguntas frecuentes | Resolver dudas comunes sobre el uso de la plataforma y sus servicios. |
+| `ciudadano` | Crear reportes y consultar únicamente los reportes asociados a su cuenta. |
+| `admin` | Consultar todos los reportes y actualizar el estado de cualquiera de ellos. |
+
+Las cuentas nuevas se crean con el rol `ciudadano`. La asignación del rol `admin` se realiza manualmente desde MongoDB Atlas a una cuenta autorizada. La autorización se comprueba en el backend mediante middleware, por lo que una cuenta ciudadana no puede actualizar estados aunque intente llamar directamente al endpoint.
+
+---
+
+## Tecnologías utilizadas
+
+| Área | Tecnología | Uso |
+|---|---|---|
+| Frontend | HTML5 | Estructura de las páginas. |
+| Estilos | CSS3 | Diseño adaptable, componentes y temas visuales. |
+| Interactividad | JavaScript | Búsqueda, filtros, formularios, sesión y paneles. |
+| Backend | Node.js y Express | Servidor y API REST. |
+| Base de datos | MongoDB Atlas | Persistencia de usuarios y reportes. |
+| Modelado | Mongoose | Esquemas y consultas a MongoDB. |
+| Autenticación | JSON Web Token (JWT) | Identificación de usuarios mediante token. |
+| Contraseñas | bcryptjs | Hash y verificación de contraseñas. |
+| OAuth | Passport y passport-google-oauth20 | Inicio de sesión opcional con Google. |
+| Archivos | Multer | Recepción y validación de evidencias. |
+| Seguridad | Helmet, CORS y express-rate-limit | Cabeceras HTTP, control de orígenes y limitación de solicitudes. |
+| Cookies y sesión OAuth | cookie-parser y express-session | Lectura de cookies y estado temporal del flujo OAuth. |
+
+---
+
+## API principal
+
+Las rutas siguientes forman parte de la API implementada:
+
+| Método | Endpoint | Descripción | Acceso |
+|---|---|---|---|
+| `POST` | `/api/auth/registro` | Registrar una cuenta nueva. | Público |
+| `POST` | `/api/auth/login` | Iniciar sesión con correo y contraseña. | Público |
+| `GET` | `/api/auth/perfil` | Consultar el perfil de la sesión actual. | Autenticado |
+| `POST` | `/api/auth/logout` | Cerrar la sesión. | Público / sesión actual |
+| `GET` | `/api/auth/google` | Iniciar autenticación con Google. | Público, si OAuth está configurado |
+| `GET` | `/api/auth/google/callback` | Recibir la respuesta de Google. | Flujo OAuth |
+| `GET` | `/api/reportes` | Consultar reportes propios o todos, según el rol. | Autenticado |
+| `POST` | `/api/reportes` | Crear un reporte y adjuntar evidencia opcional. | Autenticado |
+| `PATCH` | `/api/reportes/:id/estado` | Actualizar el estado de un reporte. | Solo administrador |
+| `GET` | `/api/health` | Comprobar el estado del servidor y la conexión a la base de datos. | Público |
+
+Los estados permitidos para un reporte son `Pendiente`, `En curso` y `Resuelto`.
+
+---
+
+## Estructura general del proyecto
+
+```text
+VozYControl/
+├── config/
+│   └── passport.js
+├── controllers/
+│   └── auth.controller.js
+├── middlewares/
+│   └── auth.middleware.js
+├── models/
+│   ├── Usuario.js
+│   └── Reporte.js
+├── routes/
+│   └── auth.routes.js
+├── utils/
+│   └── jwt.js
+├── css/
+│   └── styles.css
+├── js/
+│   └── main.js
+├── index.html
+├── login.html
+├── panel.html
+├── perfil.html
+├── reportar.html
+├── server.js
+├── package.json
+└── README.md
+```
+
+---
+
+## Instalación y ejecución
+
+### Requisitos
+
+- Node.js 20 o superior.
+- npm.
+- Una instancia de MongoDB Atlas o una instancia compatible de MongoDB.
+- Git.
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/huberalexander23/VozYControl.git
+cd VozYControl
+```
+
+### 2. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 3. Configurar variables de entorno
+
+Crear un archivo `.env` en la raíz del proyecto. Como mínimo, configurar:
+
+```env
+PORT=3000
+NODE_ENV=development
+MONGODB_URI=mongodb+srv://<usuario>:<password>@<cluster>/
+MONGODB_DATABASE=vozycontrol
+JWT_SECRET=<secreto_aleatorio_de_al_menos_32_caracteres>
+APP_URL=http://localhost:3000
+```
+
+Para habilitar el inicio de sesión con Google, configurar también:
+
+```env
+GOOGLE_CLIENT_ID=<client_id_de_google>
+GOOGLE_CLIENT_SECRET=<client_secret_de_google>
+GOOGLE_CALLBACK_URL=http://localhost:3000/api/auth/google/callback
+OAUTH_SESSION_SECRET=<secreto_aleatorio_de_al_menos_32_caracteres>
+```
+
+Las credenciales reales deben mantenerse en el archivo local `.env`; no deben publicarse ni subirse al repositorio. En despliegues HTTPS, ajustar `APP_URL` y `GOOGLE_CALLBACK_URL` al dominio real y registrar la URL de callback en Google Cloud.
+
+### 4. Iniciar el servidor
+
+Modo desarrollo:
+
+```bash
+npm run dev
+```
+
+Modo normal:
+
+```bash
+npm start
+```
+
+Abrir en el navegador:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## Seguridad implementada
+
+- Contraseñas protegidas mediante bcrypt.
+- JWT firmado y validado en el servidor.
+- Cookie de autenticación configurada con `HttpOnly`, `SameSite=Lax` y `Secure` cuando corresponde a HTTPS.
+- Middleware de autenticación para proteger las operaciones privadas.
+- Middleware de autorización por roles para restringir la actualización de estados al administrador.
+- Validación de categorías, ubicación, descripción y archivos adjuntos.
+- Límite de tamaño y tipos MIME permitidos para evidencias.
+- Configuración de CORS y validación del origen para solicitudes que modifican datos con sesión autenticada.
+- Limitación de solicitudes a la API y cabeceras de seguridad mediante Helmet.
+
+---
 
 ## Metodología de desarrollo
 
-El proyecto adopta un enfoque ágil híbrido que combina **Feature-Driven Development (FDD)** con ciclos cortos de trabajo inspirados en Scrum. El desarrollo se organiza alrededor de funcionalidades concretas que se construyen, revisan e integran progresivamente.
-
-El proceso contempla cuatro etapas:
-
-1. **Modelado y definición de la base:** identificación de las entidades principales, como usuarios, servicios públicos y reportes, y definición de sus relaciones.
-2. **Diseño de funcionalidades del MVP:** priorización de las funciones esenciales, comenzando por la consulta de servicios, seguida del registro de reportes y el panel administrativo.
-3. **Desarrollo por iteraciones:** organización del trabajo en ciclos de aproximadamente dos semanas, con entregas y revisiones periódicas.
-4. **Construcción y validación:** desarrollo, prueba e integración progresiva de las funcionalidades.
+El proyecto se organiza alrededor de funcionalidades concretas, construidas y revisadas progresivamente mediante iteraciones. La planificación académica contempla etapas de modelado, priorización del producto mínimo viable, desarrollo y validación.
 
 ### Planificación por sprints
 
-| Sprint | Funcionalidades | Responsables | Fecha de entrega propuesta |
+| Sprint | Funcionalidades planificadas | Responsables | Fecha propuesta |
 |---|---|---|---|
 | 1 | Registro de usuarios y sección de preguntas frecuentes | Huber Gonzalez y Karol Bermudez | 17/10/2026 |
 | 2 | Buscador por categoría, filtro por ubicación e información de requisitos | Sebastian Truque y Karol Bermudez | 31/10/2026 |
 | 3 | Reportes ciudadanos de fallas o negación de servicios con evidencia | Huber Gonzalez | 14/11/2026 |
 | 4 | Panel administrativo y sistema de notificaciones | Sebastian Truque y Karol Bermudez | 28/11/2026 |
 
+> **Nota sobre el alcance:** la planificación académica incluye funcionalidades propuestas como preguntas frecuentes, filtro geográfico, notificaciones y otros módulos. Este README describe como implementadas únicamente las funciones presentes en la versión actual del código; las demás deben considerarse pendientes o planificadas hasta que se desarrollen.
+
 ---
 
-## Diseño y navegación
+## Próximas mejoras posibles
 
-La propuesta contempla prototipos de alta y baja fidelidad y un mapa de navegación jerárquico para organizar el recorrido de los usuarios por la plataforma.
+- Incorporar búsqueda y filtros geográficos reales.
+- Implementar notificaciones sobre cambios en el estado de los reportes.
+- Añadir una sección de preguntas frecuentes administrable.
+- Ampliar el catálogo de servicios y su información institucional.
+- Incorporar pruebas automatizadas para los endpoints y permisos.
+- Añadir herramientas de despliegue y monitoreo para producción.
 
-La navegación se estructura alrededor de las acciones principales: consultar servicios, revisar información y requisitos, registrar reportes, acceder al perfil y consultar las opciones de administración.
-
-## Tecnologías
-
-La propuesta inicial contemplaba React.js para el frontend y PostgreSQL como sistema de gestión de bases de datos. Durante la implementación técnica, se adaptó la solución a las siguientes tecnologías:
-
-- **Frontend:** HTML5, CSS3 y JavaScript.
-- **Backend:** Node.js y Express.
-- **Base de datos:** MongoDB Atlas.
-- **Modelado de datos:** Mongoose.
-- **Gestión de evidencias:** Multer.
-- **Seguridad de la aplicación:** Helmet y express-rate-limit.
-
-La base de datos de MongoDB Atlas se denomina `vozycontrol` y permite almacenar la información asociada a los reportes ciudadanos, incluyendo su categoría, ubicación, descripción, estado y evidencia adjunta.
-
-## Autenticación y autorización
-
-La aplicación incorpora registro e inicio de sesión con correo y contraseña, almacenamiento de contraseñas mediante hash bcrypt y emisión de JWT firmados por el servidor. También contempla autenticación con Google mediante Passport y OAuth 2.0, cuando se configuran las credenciales de Google Cloud.
-
-Los usuarios nuevos reciben el rol `ciudadano`. El rol `admin` se asigna manualmente desde MongoDB Atlas a cuentas autorizadas. Las rutas de reportes requieren autenticación: cada ciudadano consulta únicamente sus reportes y los administradores pueden consultar todos y actualizar su estado.
-
-La sesión se entrega en una cookie `HttpOnly`, `Secure` (en HTTPS) y `SameSite=Lax`. El flujo OAuth utiliza el parámetro `state` con una sesión temporal de Express para mitigar CSRF. En despliegues de producción, el almacén de sesiones debe sustituirse por uno persistente y deben configurarse HTTPS, dominios y políticas de privacidad adecuados.
-
-### Configuración del cliente OAuth en Google Cloud
-
-Para el Codespace actual:
-
-- **Origen autorizado de JavaScript:** `https://cuddly-giggle-gx7gwvvvjgxxhvwgx-3000.app.github.dev`
-- **URI de redireccionamiento autorizados:** `https://cuddly-giggle-gx7gwvvvjgxxhvwgx-3000.app.github.dev/api/auth/google/callback`
-
-El Client ID, Client Secret, JWT secret y OAUTH session secret se configuran en el archivo local `.env`. No se deben almacenar en GitHub. Si el Codespace cambia de URL, hay que actualizar el origen y la URI de redireccionamiento en Google Cloud y en `.env`.
-
-## Accesibilidad y experiencia de usuario
-
-La interfaz incorpora características orientadas a facilitar el uso de la plataforma:
-
-- Navegación mediante teclado.
-- Indicadores visibles de foco.
-- Contraste adecuado en textos y componentes.
-- Diseño adaptable a computadores, tabletas y celulares.
-- Preferencia de movimiento reducido.
-- Alternancia entre modo claro y modo oscuro.
 ---
 
 **VozYControl — BY Defenders**  
+*Una plataforma para informar, reportar y hacer seguimiento ciudadano.*

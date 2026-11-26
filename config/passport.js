@@ -11,7 +11,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.
   }, async (accessToken, refreshToken, profile, done) => {
     try {
       const email = String(profile.emails?.[0]?.value || "").trim().toLowerCase();
-      const emailVerified = profile._json?.email_verified === true;
+      const emailVerified = profile._json?.email_verified === true || profile._json?.verified_email === true;
       if (!email || !emailVerified) return done(null, false, { message: "Google debe proporcionar un correo verificado." });
 
       let usuario = await Usuario.findOne({ googleId: profile.id });

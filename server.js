@@ -25,6 +25,8 @@ const categories = ["Agua potable", "Salud", "Educación", "Energía"];
 
 app.set("trust proxy", 1);
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
+
+// Allowlist explícita: URL de Codespaces y localhost solo en desarrollo.
 const allowedOrigins = new Set([
   APP_ORIGIN,
   ...(process.env.NODE_ENV !== "production"
@@ -34,7 +36,6 @@ const allowedOrigins = new Set([
 
 app.use(cors({
   origin(origin, callback) {
-    // Las llamadas sin Origin (por ejemplo, health checks) no usan CORS.
     if (!origin) return callback(null, false);
     let normalizedOrigin;
     try {
@@ -42,41 +43,16 @@ app.use(cors({
     } catch {
       return callback(new Error("Origen inválido."));
     }
-    app.use("/api", (req, res, next) => {
-  const changesData = !["GET", "HEAD", "OPTIONS"].includes(req.method);
+    return callback(null, allowedOrigins.has(normalizedOrigin));
+  },
+  credentials: true
+}));
 
-  // Solo las operaciones autenticadas mediante cookie necesitan esta
-  // comprobación de origen. El login y el registro todavía no tienen JWT.
-  if (!changesData || !req.cookies?.vozy_token) return next();
-
-  const requestOrigin = req.get("Origin");
-  if (!requestOrigin) {
-    return res.status(403).json({
-      message: "No se recibió el origen de la solicitud."
-    });
-  }
-
-  let normalizedOrigin;
-  try {
-    normalizedOrigin = new URL(requestOrigin).origin;
-  } catch {
-    return res.status(403).json({
-      message: "El origen de la solicitud no es válido."
-    });
-  }
-
-  if (!allowedOrigins.has(normalizedOrigin)) {
-    console.error("Origen rechazado:", {
-      recibido: normalizedOrigin,
-      permitidos: [...allowedOrigins]
-    });
-    return res.status(403).json({
-      message: "Origen de solicitud no permitido."
-    });
-  }
-
-  next();
-});-change-me",
+app.use(express.json({ limit: "100kb" }));
+app.use(cookieParser());
+app.use(session({
+  name: "vozy_oauth_state",
+  secret: process.env.OAUTH_SESSION_SECRET || process.env.JWT_SECRET || "development-only-change-me",
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -88,16 +64,44 @@ app.use(cors({
 }));
 app.use(passport.initialize());
 
+// La protección de origen aplica a operaciones con cookie JWT.
+// Login y registro no tienen todavía una cookie autenticada.
 app.use("/api", (req, res, next) => {
   const changesData = !["GET", "HEAD", "OPTIONS"].includes(req.method);
-  if (changesData && req.cookies?.vozy_token && req.get("origin") !== APP_ORIGIN) {
+  if (!changesData || !req.cookies?.vozy_token) return next();
+
+  const requestOrigin = req.get("Origin");
+  if (!requestOrigin) {
+    return res.status(403).json({ message: "No se recibió el origen de la solicitud." });
+  }
+
+  let normalizedOrigin;
+  try {
+    normalizedOrigin = new URL(requestOrigin).origin;
+  } catch {
+    return res.status(403).json({ message: "El origen de la solicitud no es válido." });
+  }
+
+  if (!allowedOrigins.has(normalizedOrigin)) {
+    console.error("Origen rechazado:", {
+      recibido: normalizedOrigin,
+      permitidos: [...allowedOrigins]
+    });
     return res.status(403).json({ message: "Origen de solicitud no permitido." });
   }
+
   next();
 });
 
-app.use("/api/", rateLimit({ windowMs: 15 * 60 * 1000, limit: 100, standardHeaders: "draft-7", legacyHeaders: false }));
+app.use("/api/", rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-7",
+  legacyHeaders: false
+}));
+
 app.use("/api/auth", require("./routes/auth.routes"));
+
 app.use(express.static(__dirname, {
   dotfiles: "deny",
   index: "index.html",
@@ -110,19 +114,14 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", database: mongoose.connection.name });
 });
 
-const evidenceSchema = new mongoose.Schema({
-  filename: { type: String, maxlength: 180 },
-  mimetype: String,
-  size: Number,
-  data: Buffer
-}, { _id: false });
-
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: MAX_FILE_SIZE, files: 1 },
   fileFilter: (req, file, callback) => {
     const allowed = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
-    if (!allowed.includes(file.mimetype)) return callback(new Error("El archivo debe ser JPG, PNG, WEBP o PDF."));
+    if (!allowed.includes(file.mimetype)) {
+      return callback(new Error("El archivo debe ser JPG, PNG, WEBP o PDF."));
+    }
     callback(null, true);
   }
 });
@@ -166,6 +165,7 @@ app.post("/api/reportes", verificarToken, upload.single("evidencia"), async (req
       description,
       evidence
     });
+
     res.status(201).json({
       message: "Reporte guardado correctamente.",
       report: {
@@ -175,7 +175,11 @@ app.post("/api/reportes", verificarToken, upload.single("evidencia"), async (req
         description: report.description,
         reporterName: report.reporterName,
         status: report.status,
-        evidence: evidence ? { filename: evidence.filename, mimetype: evidence.mimetype, size: evidence.size } : null,
+        evidence: evidence ? {
+          filename: evidence.filename,
+          mimetype: evidence.mimetype,
+          size: evidence.size
+        } : null,
         createdAt: report.createdAt
       }
     });
@@ -188,7 +192,13 @@ app.patch("/api/reportes/:id/estado", verificarToken, permitirRoles("admin"), as
   try {
     const allowed = ["Pendiente", "En curso", "Resuelto"];
     if (!allowed.includes(req.body.status)) return res.status(400).json({ message: "Estado no válido." });
-    const report = await Report.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true, runValidators: true }).select("-evidence.data");
+
+    const report = await Report.findByIdAndUpdate(
+      req.params.id,
+      { status: req.body.status },
+      { new: true, runValidators: true }
+    ).select("-evidence.data");
+
     if (!report) return res.status(404).json({ message: "Reporte no encontrado." });
     res.json({ message: "Estado actualizado.", report });
   } catch (error) {
@@ -198,12 +208,22 @@ app.patch("/api/reportes/:id/estado", verificarToken, permitirRoles("admin"), as
 
 app.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
-    const message = error.code === "LIMIT_FILE_SIZE" ? "El archivo supera el máximo permitido de 5 MB." : "No se pudo procesar el archivo adjunto.";
+    const message = error.code === "LIMIT_FILE_SIZE"
+      ? "El archivo supera el máximo permitido de 5 MB."
+      : "No se pudo procesar el archivo adjunto.";
     return res.status(400).json({ message });
   }
-  if (error.message && error.message.startsWith("El archivo debe ser")) return res.status(400).json({ message: error.message });
-  if (error.name === "ValidationError") return res.status(400).json({ message: "Los datos enviados no son válidos." });
-  if (error.name === "CastError") return res.status(400).json({ message: "Identificador no válido." });
+
+  if (error.message && error.message.startsWith("El archivo debe ser")) {
+    return res.status(400).json({ message: error.message });
+  }
+  if (error.name === "ValidationError") {
+    return res.status(400).json({ message: "Los datos enviados no son válidos." });
+  }
+  if (error.name === "CastError") {
+    return res.status(400).json({ message: "Identificador no válido." });
+  }
+
   console.error(error);
   res.status(500).json({ message: "Ocurrió un error al procesar la solicitud." });
 });
@@ -211,6 +231,7 @@ app.use((error, req, res, next) => {
 async function start() {
   const required = ["MONGODB_URI", "JWT_SECRET"];
   const missing = required.filter((key) => !process.env[key]);
+
   if (missing.length) {
     console.error("Faltan variables de entorno:", missing.join(", "));
     process.exit(1);
@@ -219,15 +240,30 @@ async function start() {
     console.error("JWT_SECRET debe tener al menos 32 caracteres.");
     process.exit(1);
   }
-  const googleConfigured = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_CALLBACK_URL);
+
+  const googleConfigured = Boolean(
+    process.env.GOOGLE_CLIENT_ID &&
+    process.env.GOOGLE_CLIENT_SECRET &&
+    process.env.GOOGLE_CALLBACK_URL
+  );
+
   if (googleConfigured && (!process.env.OAUTH_SESSION_SECRET || process.env.OAUTH_SESSION_SECRET.length < 32)) {
     console.error("OAUTH_SESSION_SECRET debe tener al menos 32 caracteres cuando Google OAuth está habilitado.");
     process.exit(1);
   }
+
   try {
-    await mongoose.connect(MONGODB_URI, { dbName: DATABASE_NAME, serverSelectionTimeoutMS: 10000 });
+    await mongoose.connect(MONGODB_URI, {
+      dbName: DATABASE_NAME,
+      serverSelectionTimeoutMS: 10000
+    });
+
     console.log("MongoDB conectado:", mongoose.connection.name);
-    app.listen(PORT, "0.0.0.0", () => console.log(`VozYControl disponible en el puerto ${PORT}`));
+    console.log("Orígenes permitidos:", [...allowedOrigins]);
+
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`VozYControl disponible en el puerto ${PORT}`);
+    });
   } catch (error) {
     console.error("No fue posible conectar con MongoDB:", error.message);
     process.exit(1);

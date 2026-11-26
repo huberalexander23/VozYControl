@@ -373,3 +373,9 @@ details.service-card { display: block; padding: 0; }
 @media (max-width: 899px) {
   .app-shell { width: 100%; max-width: 520px; }
 }
+
+.admin-report-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 0 14px 12px; }
+.admin-report-actions select { min-height: 40px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); color: var(--ink); }
+.admin-report-actions .btn { min-height: 40px; padding: 7px 12px; font-size: 12px; }
+.report-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px; }
+.report-row > div:first-child { min-width: 180px; flex: 1; }

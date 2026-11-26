@@ -1,10 +1,10 @@
 # VozYControl
 
-## Plataforma ciudadana para el acceso a servicios públicos y el seguimiento de reportes
+## Una herramienta para informar, reportar y hacer seguimiento
 
-**VozYControl** es una aplicación web orientada a facilitar el acceso de la ciudadanía a información sobre servicios sociales y públicos, y a ofrecer un canal para registrar y hacer seguimiento a situaciones que afectan su prestación.
+**VozYControl** nace con una idea sencilla: que las personas puedan encontrar información sobre los servicios públicos y tengan un lugar donde contar los problemas que se presentan con ellos. Desde la plataforma se pueden consultar servicios, crear reportes, adjuntar evidencias y revisar cómo avanza cada caso.
 
-La plataforma permite consultar servicios por categoría, crear reportes sobre problemas identificados, adjuntar evidencias y revisar el estado de cada caso. Además, incorpora perfiles con distintos permisos para separar las funciones de los ciudadanos y del personal administrador.
+También cuenta con dos tipos de usuario: ciudadanos, que registran y consultan sus reportes, y administradores, que pueden revisar todos los casos y actualizar su estado.
 
 ---
 
@@ -26,13 +26,11 @@ La plataforma permite consultar servicios por categoría, crear reportes sobre p
 
 ---
 
-## Problemática y propósito
+## ¿Por qué hicimos VozYControl?
 
-La ciudadanía puede encontrar dificultades para conocer los servicios disponibles, entender los canales de atención y dejar constancia de fallas o inconvenientes relacionados con su prestación.
+A veces no es fácil encontrar información clara sobre un servicio, saber dónde acudir o dejar constancia de un problema. Por eso pensamos en VozYControl: una plataforma que reúne información básica de servicios y permite registrar situaciones que afectan a la comunidad, para que cada reporte quede documentado y se pueda consultar su estado.
 
-VozYControl propone una herramienta digital que reúne información de referencia sobre servicios y permite documentar situaciones mediante reportes. Su propósito es promover una ciudadanía informada y facilitar el seguimiento de los casos registrados.
-
-## Funcionalidades implementadas
+## ¿Qué se puede hacer en la plataforma?
 
 ### Consulta de servicios
 
@@ -77,20 +75,20 @@ VozYControl propone una herramienta digital que reúne información de referenci
 
 ---
 
-## Roles y permisos
+## Tipos de usuario y permisos
 
-La aplicación maneja dos roles:
+VozYControl cuenta con dos roles:
 
 | Rol | Permisos |
 |---|---|
 | `ciudadano` | Crear reportes y consultar únicamente los reportes asociados a su cuenta. |
 | `admin` | Consultar todos los reportes y actualizar el estado de cualquiera de ellos. |
 
-Las cuentas nuevas se crean con el rol `ciudadano`. La asignación del rol `admin` se realiza manualmente desde MongoDB Atlas a una cuenta autorizada. La autorización se comprueba en el backend mediante middleware, por lo que una cuenta ciudadana no puede actualizar estados aunque intente llamar directamente al endpoint.
+Cuando alguien se registra, su cuenta queda con el rol `ciudadano`. El rol `admin` se asigna desde MongoDB Atlas a las cuentas autorizadas. Los permisos se revisan desde el servidor, así que un ciudadano no puede cambiar el estado de un reporte por su cuenta.
 
 ---
 
-## Tecnologías utilizadas
+## Herramientas y tecnologías
 
 | Área | Tecnología | Uso |
 |---|---|---|
@@ -109,9 +107,9 @@ Las cuentas nuevas se crean con el rol `ciudadano`. La asignación del rol `admi
 
 ---
 
-## API principal
+## Rutas principales de la API
 
-Las rutas siguientes forman parte de la API implementada:
+Estas son las rutas que utiliza la aplicación para gestionar usuarios y reportes:
 
 | Método | Endpoint | Descripción | Acceso |
 |---|---|---|---|
@@ -130,7 +128,7 @@ Los estados permitidos para un reporte son `Pendiente`, `En curso` y `Resuelto`.
 
 ---
 
-## Estructura general del proyecto
+## ¿Cómo está organizado el proyecto?
 
 ```text
 VozYControl/
@@ -163,7 +161,7 @@ VozYControl/
 
 ---
 
-## Instalación y ejecución
+## Cómo ejecutar el proyecto
 
 ### Requisitos
 
@@ -187,7 +185,7 @@ npm install
 
 ### 3. Configurar variables de entorno
 
-Crear un archivo `.env` en la raíz del proyecto. Como mínimo, configurar:
+Crea un archivo llamado `.env` en la carpeta principal del proyecto y agrega la configuración básica:
 
 ```env
 PORT=3000
@@ -207,7 +205,7 @@ GOOGLE_CALLBACK_URL=http://localhost:3000/api/auth/google/callback
 OAUTH_SESSION_SECRET=<secreto_aleatorio_de_al_menos_32_caracteres>
 ```
 
-Las credenciales reales deben mantenerse en el archivo local `.env`; no deben publicarse ni subirse al repositorio. En despliegues HTTPS, ajustar `APP_URL` y `GOOGLE_CALLBACK_URL` al dominio real y registrar la URL de callback en Google Cloud.
+Guarda tus claves y contraseñas únicamente en el archivo local `.env`. No las publiques ni las subas a GitHub. Si vas a desplegar la aplicación en otro dominio, actualiza las URL y la configuración de Google Cloud.
 
 ### 4. Iniciar el servidor
 
@@ -231,7 +229,7 @@ http://localhost:3000
 
 ---
 
-## Seguridad implementada
+## Seguridad
 
 - Contraseñas protegidas mediante bcrypt.
 - JWT firmado y validado en el servidor.
@@ -245,24 +243,22 @@ http://localhost:3000
 
 ---
 
-## Metodología de desarrollo
+## Cómo organizamos el desarrollo
 
-El proyecto se organiza alrededor de funcionalidades concretas, construidas y revisadas progresivamente mediante iteraciones. La planificación académica contempla etapas de modelado, priorización del producto mínimo viable, desarrollo y validación.
+Fuimos organizando el trabajo por funcionalidades, avanzando por etapas y revisando cada parte a medida que se iba construyendo. Primero definimos la idea y las funciones principales; después trabajamos en el desarrollo, la integración y las pruebas.
 
-### Planificación por sprints
+### Plan de trabajo
 
-| Sprint | Funcionalidades planificadas | Responsables | Fecha propuesta |
+| Sprint | Trabajo del sprint | Responsables | Fecha |
 |---|---|---|---|
 | 1 | Registro de usuarios y sección de preguntas frecuentes | Huber Gonzalez y Karol Bermudez | 17/10/2026 |
 | 2 | Buscador por categoría, filtro por ubicación e información de requisitos | Sebastian Truque y Karol Bermudez | 31/10/2026 |
 | 3 | Reportes ciudadanos de fallas o negación de servicios con evidencia | Huber Gonzalez | 14/11/2026 |
 | 4 | Panel administrativo y sistema de notificaciones | Sebastian Truque y Karol Bermudez | 28/11/2026 |
 
-> **Nota sobre el alcance:** la planificación académica incluye funcionalidades propuestas como preguntas frecuentes, filtro geográfico, notificaciones y otros módulos. Este README describe como implementadas únicamente las funciones presentes en la versión actual del código; las demás deben considerarse pendientes o planificadas hasta que se desarrollen.
-
 ---
 
-## Próximas mejoras posibles
+## Ideas para seguir mejorándolo
 
 - Incorporar búsqueda y filtros geográficos reales.
 - Implementar notificaciones sobre cambios en el estado de los reportes.
@@ -274,4 +270,4 @@ El proyecto se organiza alrededor de funcionalidades concretas, construidas y re
 ---
 
 **VozYControl — BY Defenders**  
-*Una plataforma para informar, reportar y hacer seguimiento ciudadano.*
+*Una plataforma para consultar servicios, registrar problemas y seguir sus avances.*

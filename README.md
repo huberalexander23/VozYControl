@@ -103,6 +103,23 @@ La propuesta inicial contemplaba React.js para el frontend y PostgreSQL como sis
 
 La base de datos de MongoDB Atlas se denomina `vozycontrol` y permite almacenar la información asociada a los reportes ciudadanos, incluyendo su categoría, ubicación, descripción, estado y evidencia adjunta.
 
+## Autenticación y autorización
+
+La aplicación incorpora registro e inicio de sesión con correo y contraseña, almacenamiento de contraseñas mediante hash bcrypt y emisión de JWT firmados por el servidor. También contempla autenticación con Google mediante Passport y OAuth 2.0, cuando se configuran las credenciales de Google Cloud.
+
+Los usuarios nuevos reciben el rol `ciudadano`. El rol `admin` se asigna manualmente desde MongoDB Atlas a cuentas autorizadas. Las rutas de reportes requieren autenticación: cada ciudadano consulta únicamente sus reportes y los administradores pueden consultar todos y actualizar su estado.
+
+La sesión se entrega en una cookie `HttpOnly`, `Secure` (en HTTPS) y `SameSite=Lax`. El flujo OAuth utiliza el parámetro `state` con una sesión temporal de Express para mitigar CSRF. En despliegues de producción, el almacén de sesiones debe sustituirse por uno persistente y deben configurarse HTTPS, dominios y políticas de privacidad adecuados.
+
+### Configuración del cliente OAuth en Google Cloud
+
+Para el Codespace actual:
+
+- **Origen autorizado de JavaScript:** `https://cuddly-giggle-gx7gwvvvjgxxhvwgx-3000.app.github.dev`
+- **URI de redireccionamiento autorizados:** `https://cuddly-giggle-gx7gwvvvjgxxhvwgx-3000.app.github.dev/api/auth/google/callback`
+
+El Client ID, Client Secret, JWT secret y OAUTH session secret se configuran en el archivo local `.env`. No se deben almacenar en GitHub. Si el Codespace cambia de URL, hay que actualizar el origen y la URI de redireccionamiento en Google Cloud y en `.env`.
+
 ## Accesibilidad y experiencia de usuario
 
 La interfaz incorpora características orientadas a facilitar el uso de la plataforma:

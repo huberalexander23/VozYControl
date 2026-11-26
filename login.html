@@ -22,7 +22,9 @@
     <form id="login-form" novalidate>
       <div class="field"><label for="login-email">Correo electrónico</label><input type="email" id="login-email" name="email" placeholder="nombre@correo.com" autocomplete="email" required></div>
       <div class="field"><label for="login-password">Contraseña</label><input type="password" id="login-password" name="password" placeholder="Ingresa tu contraseña" autocomplete="current-password" required></div>
-      <button type="submit" class="btn btn-accent btn-full">Continuar</button>\n      <p id="login-status" class="form-note" role="status" aria-live="polite" hidden></p>\n      <a class="btn btn-secondary btn-full" href="/api/auth/google">Continuar con Google</a>
+      <button type="submit" class="btn btn-accent btn-full">Continuar</button>
+      <p id="login-status" class="form-note" role="status" aria-live="polite" hidden></p>
+      <a class="btn btn-secondary btn-full" href="/api/auth/google">Continuar con Google</a>
     </form>
   </section>
   <section class="auth-panel" id="panel-register" role="tabpanel" aria-labelledby="tab-register" hidden>
@@ -30,7 +32,8 @@
       <div class="field"><label for="reg-name">Nombre completo</label><input type="text" id="reg-name" name="nombre" placeholder="Tu nombre completo" autocomplete="name" required></div>
       <div class="field"><label for="reg-email">Correo electrónico</label><input type="email" id="reg-email" name="email" placeholder="nombre@correo.com" autocomplete="email" required></div>
       <div class="field"><label for="reg-password">Contraseña</label><input type="password" id="reg-password" name="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" minlength="8" required></div>
-      <button type="submit" class="btn btn-accent btn-full">Crear cuenta</button>\n      <p id="register-status" class="form-note" role="status" aria-live="polite" hidden></p>
+      <button type="submit" class="btn btn-accent btn-full">Crear cuenta</button>
+      <p id="register-status" class="form-note" role="status" aria-live="polite" hidden></p>
     </form>
   </section>
   <p class="auth-footer">¿Aún no tienes cuenta? <button type="button" class="text-button" id="switch-register">Regístrate aquí</button></p>

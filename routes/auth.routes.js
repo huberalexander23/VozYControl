@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
 const rateLimit = require("express-rate-limit");
-const { registrar, login, perfil, logout, iniciarSesion, usuarioPublico } = require("../controllers/auth.controller");
+const { registrar, login, perfil, logout, iniciarSesion } = require("../controllers/auth.controller");
 const { verificarToken } = require("../middlewares/auth.middleware");
 
 const loginLimiter = rateLimit({

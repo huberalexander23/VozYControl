@@ -43,6 +43,14 @@ app.use(session({
 }));
 app.use(passport.initialize());
 
+app.use("/api", (req, res, next) => {
+  const changesData = !["GET", "HEAD", "OPTIONS"].includes(req.method);
+  if (changesData && req.cookies?.vozy_token && req.get("origin") !== APP_ORIGIN) {
+    return res.status(403).json({ message: "Origen de solicitud no permitido." });
+  }
+  next();
+});
+
 app.use("/api/", rateLimit({ windowMs: 15 * 60 * 1000, limit: 100, standardHeaders: "draft-7", legacyHeaders: false }));
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use(express.static(__dirname, {
@@ -164,6 +172,11 @@ async function start() {
   }
   if (process.env.JWT_SECRET.length < 32) {
     console.error("JWT_SECRET debe tener al menos 32 caracteres.");
+    process.exit(1);
+  }
+  const googleConfigured = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_CALLBACK_URL);
+  if (googleConfigured && (!process.env.OAUTH_SESSION_SECRET || process.env.OAUTH_SESSION_SECRET.length < 32)) {
+    console.error("OAUTH_SESSION_SECRET debe tener al menos 32 caracteres cuando Google OAuth está habilitado.");
     process.exit(1);
   }
   try {

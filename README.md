@@ -258,16 +258,5 @@ Fuimos organizando el trabajo por funcionalidades, avanzando por etapas y revisa
 
 ---
 
-## Ideas para seguir mejorándolo
-
-- Incorporar búsqueda y filtros geográficos reales.
-- Implementar notificaciones sobre cambios en el estado de los reportes.
-- Añadir una sección de preguntas frecuentes administrable.
-- Ampliar el catálogo de servicios y su información institucional.
-- Incorporar pruebas automatizadas para los endpoints y permisos.
-- Añadir herramientas de despliegue y monitoreo para producción.
-
----
-
 **VozYControl — BY Defenders**  
 *Una plataforma para consultar servicios, registrar problemas y seguir sus avances.*

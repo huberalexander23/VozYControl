@@ -25,12 +25,58 @@ const categories = ["Agua potable", "Salud", "Educación", "Energía"];
 
 app.set("trust proxy", 1);
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
-app.use(cors({ origin: APP_ORIGIN || false, credentials: true }));
-app.use(express.json({ limit: "100kb" }));
-app.use(cookieParser());
-app.use(session({
-  name: "vozy_oauth_state",
-  secret: process.env.OAUTH_SESSION_SECRET || process.env.JWT_SECRET || "development-only-change-me",
+const allowedOrigins = new Set([
+  APP_ORIGIN,
+  ...(process.env.NODE_ENV !== "production"
+    ? ["http://localhost:3000", "http://127.0.0.1:3000"]
+    : [])
+].filter(Boolean));
+
+app.use(cors({
+  origin(origin, callback) {
+    // Las llamadas sin Origin (por ejemplo, health checks) no usan CORS.
+    if (!origin) return callback(null, false);
+    let normalizedOrigin;
+    try {
+      normalizedOrigin = new URL(origin).origin;
+    } catch {
+      return callback(new Error("Origen inválido."));
+    }
+    app.use("/api", (req, res, next) => {
+  const changesData = !["GET", "HEAD", "OPTIONS"].includes(req.method);
+
+  // Solo las operaciones autenticadas mediante cookie necesitan esta
+  // comprobación de origen. El login y el registro todavía no tienen JWT.
+  if (!changesData || !req.cookies?.vozy_token) return next();
+
+  const requestOrigin = req.get("Origin");
+  if (!requestOrigin) {
+    return res.status(403).json({
+      message: "No se recibió el origen de la solicitud."
+    });
+  }
+
+  let normalizedOrigin;
+  try {
+    normalizedOrigin = new URL(requestOrigin).origin;
+  } catch {
+    return res.status(403).json({
+      message: "El origen de la solicitud no es válido."
+    });
+  }
+
+  if (!allowedOrigins.has(normalizedOrigin)) {
+    console.error("Origen rechazado:", {
+      recibido: normalizedOrigin,
+      permitidos: [...allowedOrigins]
+    });
+    return res.status(403).json({
+      message: "Origen de solicitud no permitido."
+    });
+  }
+
+  next();
+});-change-me",
   resave: false,
   saveUninitialized: false,
   cookie: {

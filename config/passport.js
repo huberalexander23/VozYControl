@@ -6,7 +6,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL
+    callbackURL: process.env.GOOGLE_CALLBACK_URL,\n    state: true
   }, async (accessToken, refreshToken, profile, done) => {
     try {
       const email = String(profile.emails?.[0]?.value || "").trim().toLowerCase();

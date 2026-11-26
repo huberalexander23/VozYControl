@@ -222,22 +222,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const reportList = document.querySelector("#report-list");
   if (reportList) {
-    sessionPromise.then((user) => {
+    sessionPromise.then(async (user) => {
       if (!user) return null;
-      return fetch("/api/reportes", { credentials: "same-origin" });
+      const response = await fetch("/api/reportes", { credentials: "same-origin" });
+      if (response.status === 401) {
+        window.location.replace("login.html");
+        return null;
+      }
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "No se pudieron cargar los reportes.");
+      return { reports: result.reports || [], user };
     })
-      .then(async (response) => {
-        if (!response) return null;
-        if (response.status === 401) {
-          window.location.replace("login.html");
-          return null;
-        }
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.message || "No se pudieron cargar los reportes.");
-        return result.reports || [];
-      })
-      .then((reports) => {
-        if (!reports) return;
+      .then((data) => {
+        if (!data) return;
+        const { reports, user } = data;
         const active = reports.filter((report) => report.status !== "Resuelto").length;
         const resolved = reports.filter((report) => report.status === "Resuelto").length;
         const activeCount = document.querySelector("#active-count");

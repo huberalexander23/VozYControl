@@ -2,27 +2,26 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const savedTheme = localStorage.getItem("vozycontrol-theme");
-  if (savedTheme === "dark" || savedTheme === "light") {
-    document.documentElement.dataset.theme = savedTheme;
-  }
-  const themeHost = document.querySelector(
-    ".topbar-inner, .auth-brand, .dashboard-header-inner, .subpage-header"
-  );
+  if (savedTheme === "dark" || savedTheme === "light") document.documentElement.dataset.theme = savedTheme;
+
+  const themeHost = document.querySelector(".topbar-inner, .auth-brand, .dashboard-header-inner, .subpage-header");
   if (themeHost) {
     const themeButton = document.createElement("button");
     themeButton.type = "button";
     themeButton.className = "theme-toggle";
-    themeButton.setAttribute("aria-pressed", String(document.documentElement.dataset.theme === "dark"));
-    themeButton.setAttribute("aria-label", document.documentElement.dataset.theme === "dark" ? "Activar modo claro" : "Activar modo oscuro");
-    themeButton.textContent = document.documentElement.dataset.theme === "dark" ? "☀ Claro" : "☾ Oscuro";
+    const updateThemeButton = () => {
+      const dark = document.documentElement.dataset.theme === "dark";
+      themeButton.setAttribute("aria-pressed", String(dark));
+      themeButton.setAttribute("aria-label", dark ? "Activar modo claro" : "Activar modo oscuro");
+      themeButton.textContent = dark ? "☀ Claro" : "☾ Oscuro";
+    };
+    updateThemeButton();
     themeHost.append(themeButton);
     themeButton.addEventListener("click", () => {
-      const isDark = document.documentElement.dataset.theme !== "dark";
-      document.documentElement.dataset.theme = isDark ? "dark" : "light";
-      localStorage.setItem("vozycontrol-theme", isDark ? "dark" : "light");
-      themeButton.setAttribute("aria-pressed", String(isDark));
-      themeButton.setAttribute("aria-label", isDark ? "Activar modo claro" : "Activar modo oscuro");
-      themeButton.textContent = isDark ? "☀ Claro" : "☾ Oscuro";
+      const dark = document.documentElement.dataset.theme !== "dark";
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+      localStorage.setItem("vozycontrol-theme", dark ? "dark" : "light");
+      updateThemeButton();
     });
   }
 
@@ -46,9 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     if (emptyState) {
       emptyState.hidden = visible !== 0;
-      emptyState.textContent = visible
-        ? `${visible} servicio(s) encontrado(s).`
-        : "No se encontraron servicios. Prueba otra palabra o categoría.";
+      emptyState.textContent = visible ? `${visible} servicio(s) encontrado(s).` : "No se encontraron servicios. Prueba otra palabra o categoría.";
     }
   }
   searchInput?.addEventListener("input", filterServices);
@@ -87,18 +84,16 @@ document.addEventListener("DOMContentLoaded", () => {
       activateTab(tabs[next], true);
     });
   });
-  if (tabs.length) {
-    activateTab(tabs.find((tab) => tab.getAttribute("aria-selected") === "true") || tabs[0]);
-  }
+  if (tabs.length) activateTab(tabs.find((tab) => tab.getAttribute("aria-selected") === "true") || tabs[0]);
   document.querySelector("#switch-register")?.addEventListener("click", () => {
     const registerTab = document.querySelector("#tab-register");
-    if (registerTab) { activateTab(registerTab, true); }
+    if (registerTab) activateTab(registerTab, true);
   });
 
   const fileInput = document.querySelector("#evidencia");
   const fileName = document.querySelector("#file-name");
   fileInput?.addEventListener("change", () => {
-    fileName.textContent = fileInput.files?.[0]?.name || "Ningún archivo seleccionado";
+    if (fileName) fileName.textContent = fileInput.files?.[0]?.name || "Ningún archivo seleccionado";
   });
 
   function validateAccessForm(form) {
@@ -111,46 +106,109 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     if (firstInvalid) {
       firstInvalid.focus();
-      const status = form.querySelector('[role="status"]');
-      if (status) status.textContent = "Revisa los campos: completa la información y utiliza un correo válido.";
       return false;
     }
     return true;
   }
 
-  ["login-form", "register-form"].forEach((formId) => {
-    const form = document.getElementById(formId);
-    form?.addEventListener("submit", (event) => {
+  function showAuthMessage(form, message) {
+    const status = form.querySelector('[role="status"]');
+    if (!status) return;
+    status.hidden = false;
+    status.textContent = message;
+  }
+
+  async function sendAuthForm(form, endpoint) {
+    if (!validateAccessForm(form)) return;
+    const button = form.querySelector('button[type="submit"]');
+    if (button) button.disabled = true;
+    const body = Object.fromEntries(new FormData(form).entries());
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify(body)
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "No fue posible completar la operación.");
+      window.location.replace("panel.html");
+    } catch (error) {
+      showAuthMessage(form, error.message || "No se pudo conectar con el servidor.");
+    } finally {
+      if (button) button.disabled = false;
+    }
+  }
+
+  const loginForm = document.querySelector("#login-form");
+  loginForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    sendAuthForm(loginForm, "/api/auth/login");
+  });
+  const registerForm = document.querySelector("#register-form");
+  registerForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    sendAuthForm(registerForm, "/api/auth/registro");
+  });
+
+  const authError = new URLSearchParams(window.location.search).get("error");
+  if (authError === "google" && loginForm) showAuthMessage(loginForm, "No se pudo iniciar sesión con Google. Verifica la configuración OAuth e inténtalo nuevamente.");
+
+  const protectedPage = Boolean(document.querySelector("#report-list, #report-form, #profile-name"));
+  const sessionPromise = protectedPage
+    ? fetch("/api/auth/perfil", { credentials: "same-origin" })
+        .then(async (response) => {
+          if (!response.ok) {
+            window.location.replace("login.html");
+            return null;
+          }
+          const result = await response.json();
+          const user = result.usuario;
+          ["#dashboard-name", "#profile-name"].forEach((selector) => {
+            const element = document.querySelector(selector);
+            if (element) element.textContent = user.nombre;
+          });
+          const emailElement = document.querySelector("#profile-email");
+          if (emailElement) emailElement.textContent = user.email;
+          const avatar = document.querySelector(".profile-avatar");
+          if (avatar) avatar.textContent = user.nombre.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+          return user;
+        })
+        .catch(() => {
+          window.location.replace("login.html");
+          return null;
+        })
+    : Promise.resolve(null);
+
+  document.querySelectorAll("[data-auth-logout]").forEach((link) => {
+    link.addEventListener("click", async (event) => {
       event.preventDefault();
-      if (!validateAccessForm(form)) return;
-      const name = form.querySelector('[name="name"]')?.value.trim();
-      if (name) sessionStorage.setItem("vozycontrol-demo-name", name);
-      else if (!sessionStorage.getItem("vozycontrol-demo-name")) sessionStorage.setItem("vozycontrol-demo-name", "María Fernández");
-      const status = form.querySelector('[role="status"]');
-      if (status) status.textContent = "Datos revisados para la demostración. Abriendo el panel de ejemplo; no se creó una cuenta ni se inició sesión real.";
-      window.location.href = "panel.html";
+      try {
+        await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+      } finally {
+        window.location.replace("index.html");
+      }
     });
-  });
-
-  document.querySelectorAll("[data-demo-logout]").forEach((link) => {
-    link.addEventListener("click", () => sessionStorage.removeItem("vozycontrol-demo-name"));
-  });
-
-  const demoName = sessionStorage.getItem("vozycontrol-demo-name");
-  ["#dashboard-name", "#profile-name"].forEach((selector) => {
-    const nameTarget = document.querySelector(selector);
-    if (nameTarget && demoName) nameTarget.textContent = demoName;
   });
 
   const reportList = document.querySelector("#report-list");
   if (reportList) {
-    fetch("/api/reportes")
+    sessionPromise.then((user) => {
+      if (!user) return null;
+      return fetch("/api/reportes", { credentials: "same-origin" });
+    })
       .then(async (response) => {
+        if (!response) return null;
+        if (response.status === 401) {
+          window.location.replace("login.html");
+          return null;
+        }
         const result = await response.json();
         if (!response.ok) throw new Error(result.message || "No se pudieron cargar los reportes.");
         return result.reports || [];
       })
       .then((reports) => {
+        if (!reports) return;
         const active = reports.filter((report) => report.status !== "Resuelto").length;
         const resolved = reports.filter((report) => report.status === "Resuelto").length;
         const activeCount = document.querySelector("#active-count");
@@ -162,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!reports.length) {
           const empty = document.createElement("p");
           empty.className = "service-desc";
-          empty.textContent = "Todavía no hay reportes registrados.";
+          empty.textContent = "Todavía no tienes reportes registrados.";
           reportList.append(empty);
           return;
         }
@@ -173,9 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const content = document.createElement("div");
           const title = document.createElement("h3");
           title.className = "report-title";
-          title.textContent = report.description.length > 82
-            ? `${report.description.slice(0, 79)}...`
-            : report.description;
+          title.textContent = report.description.length > 82 ? `${report.description.slice(0, 79)}...` : report.description;
           const date = document.createElement("p");
           date.className = "report-date";
           const created = report.createdAt ? new Date(report.createdAt).toLocaleDateString("es-CO") : "";
@@ -232,6 +288,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   reportForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const user = await sessionPromise;
+    if (!user) {
+      window.location.replace("login.html");
+      return;
+    }
     let firstInvalid = null;
     requiredFields.forEach(({ id, message }) => {
       const field = document.getElementById(id);
@@ -246,7 +307,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const submitButton = reportForm.querySelector('button[type="submit"]');
     const formData = new FormData(reportForm);
-    formData.set("reporterName", sessionStorage.getItem("vozycontrol-demo-name") || "Usuario");
     if (submitButton) submitButton.disabled = true;
     if (reportStatus) {
       reportStatus.hidden = false;
@@ -254,8 +314,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("/api/reportes", { method: "POST", body: formData });
+      const response = await fetch("/api/reportes", {
+        method: "POST",
+        credentials: "same-origin",
+        body: formData
+      });
       const result = await response.json();
+      if (response.status === 401) {
+        window.location.replace("login.html");
+        return;
+      }
       if (!response.ok) throw new Error(result.message || "No se pudo guardar el reporte.");
 
       reportForm.hidden = true;

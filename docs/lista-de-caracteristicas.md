@@ -1,10 +1,15 @@
 # Lista de características (FDD)
 
-Esta lista refleja las funcionalidades observables en el código actual. Se usa la identificación `F-` para poder referenciar cada característica durante el diseño, desarrollo y revisión.
+En esta lista reunimos las funcionalidades que fuimos identificando para VozYControl. Les asignamos un código para poder ubicarlas fácilmente, agrupamos las que tienen un propósito parecido y anotamos quiénes quedaron a cargo según la distribución de nuestros sprints.
 
-**Estados:** Implementada = disponible en el código; Parcial = existe una parte funcional, pero no está completa como función integral; Pendiente = no se encontró implementada en la versión revisada.
+También indicamos el estado real de cada característica al revisar el código: así podemos distinguir lo que ya funciona de lo que todavía tenemos pendiente.
 
-| ID | Nombre de la característica | Conjunto (feature set) | Responsable | Estado |
+**Cómo leemos los estados:**
+- **Implementada:** ya podemos encontrar la función en la versión actual.
+- **Parcial:** tenemos una parte desarrollada, pero depende de una configuración adicional o no está completa por sí sola.
+- **Pendiente:** la contemplamos en la planificación, pero todavía no encontramos su implementación funcional en el código revisado.
+
+| ID | Nombre de la característica | Conjunto | Responsable(s) | Estado |
 |---|---|---|---|---|
 | F-01 | Mostrar información de servicios | Consulta de servicios | Sebastian Truque y Karol Bermudez | Implementada |
 | F-02 | Buscar servicios por texto | Consulta de servicios | Sebastian Truque y Karol Bermudez | Implementada |
@@ -13,7 +18,7 @@ Esta lista refleja las funcionalidades observables en el código actual. Se usa 
 | F-05 | Iniciar sesión con correo y contraseña | Cuentas y autenticación | Huber Gonzalez | Implementada |
 | F-06 | Cerrar sesión | Cuentas y autenticación | Huber Gonzalez | Implementada |
 | F-07 | Consultar el perfil de la sesión | Cuentas y autenticación | Huber Gonzalez | Implementada |
-| F-08 | Iniciar sesión con Google OAuth | Cuentas y autenticación | Huber Gonzalez | Parcial (depende de credenciales y configuración externa) |
+| F-08 | Iniciar sesión con Google OAuth | Cuentas y autenticación | Huber Gonzalez | Parcial: necesitamos configurar las credenciales externas |
 | F-09 | Crear un reporte ciudadano | Gestión de reportes | Huber Gonzalez | Implementada |
 | F-10 | Adjuntar evidencia a un reporte | Gestión de reportes | Huber Gonzalez | Implementada |
 | F-11 | Consultar los reportes propios | Gestión de reportes | Huber Gonzalez | Implementada |
@@ -22,14 +27,14 @@ Esta lista refleja las funcionalidades observables en el código actual. Se usa 
 | F-14 | Mostrar resumen de reportes activos y resueltos | Panel de usuario | Huber Gonzalez | Implementada |
 | F-15 | Alternar entre tema claro y oscuro | Interfaz y accesibilidad | Equipo BY Defenders | Implementada |
 | F-16 | Adaptar la interfaz a distintos tamaños de pantalla | Interfaz y accesibilidad | Equipo BY Defenders | Implementada |
-| F-17 | Preguntas frecuentes dentro de la plataforma | Información de servicios | Huber Gonzalez y Karol Bermudez | Pendiente / no identificada en la versión revisada |
-| F-18 | Filtrar servicios por ubicación geográfica | Consulta de servicios | Sebastian Truque y Karol Bermudez | Pendiente / no identificado como filtro funcional |
-| F-19 | Notificar al usuario los cambios de estado | Notificaciones | Sebastian Truque y Karol Bermudez | Pendiente / no se encontró un módulo de notificaciones |
+| F-17 | Mostrar preguntas frecuentes dentro de la plataforma | Información de servicios | Huber Gonzalez y Karol Bermudez | Pendiente: no identificamos esta función en la versión revisada |
+| F-18 | Filtrar servicios por ubicación geográfica | Consulta de servicios | Sebastian Truque y Karol Bermudez | Pendiente: todavía no encontramos un filtro geográfico funcional |
+| F-19 | Notificar al usuario cuando cambia el estado de su reporte | Notificaciones | Sebastian Truque y Karol Bermudez | Pendiente: aún no tenemos un módulo de notificaciones |
 
-## Criterio de asignación
+## ¿Cómo organizamos esta lista?
 
-Los responsables se basan en la distribución de trabajo por sprints que figura en el plan académico del proyecto. Cuando el plan asigna una funcionalidad a más de una persona, se conservan esos nombres; la tabla no pretende certificar autoría individual de cada línea de código.
+Tomamos como referencia la distribución de actividades que definimos por sprints. Cuando una característica aparece asignada a más de una persona, mantenemos esos nombres. La tabla representa la planificación del equipo y no busca atribuir individualmente cada línea de código.
 
-## Nota sobre FDD
+## Relación con FDD
 
-FDD (Feature-Driven Development) organiza el trabajo alrededor de funcionalidades pequeñas y verificables. Esta tabla documenta el inventario y estado de las características del proyecto; no afirma que se hayan generado todos los artefactos formales de cada fase de FDD.
+Usamos FDD (Feature-Driven Development) como referencia para organizar el trabajo alrededor de funcionalidades concretas. Esta lista nos sirve para tener claro qué construimos, quiénes participaron y qué nos falta. No significa que hayamos elaborado todos los documentos formales de cada etapa de FDD.

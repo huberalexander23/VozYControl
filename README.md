@@ -1,213 +1,107 @@
 # VozYControl
 
-## Una herramienta para informar, reportar y hacer seguimiento
+Plataforma web para consultar información de servicios y registrar problemas que afectan a la comunidad. Los ciudadanos pueden crear reportes, adjuntar evidencias y consultar su estado. Los administradores pueden revisar todos los reportes y actualizar su estado.
 
-**VozYControl** nace con una idea sencilla: que las personas puedan encontrar información sobre los servicios públicos y tengan un lugar donde contar los problemas que se presentan con ellos. Desde la plataforma se pueden consultar servicios, crear reportes, adjuntar evidencias y revisar cómo avanza cada caso.
+## Equipo y responsabilidades
 
-También cuenta con dos tipos de usuario: ciudadanos, que registran y consultan sus reportes, y administradores, que pueden revisar todos los casos y actualizar su estado.
+**Grupo:** BY Defenders  
+**Asignatura:** Programación Orientada a la Web  
+**Periodo:** 2026B
 
----
-
-## Información académica
-
-| Dato | Información |
+| Integrante | Responsabilidad documentada en el plan de trabajo |
 |---|---|
-| Proyecto | VozYControl |
-| Grupo | BY Defenders |
-| Asignatura | Programación Orientada a la Web |
-| Periodo académico | 2026B |
-| Tipo de proyecto | Aplicación web |
+| Huber Gonzalez | Registro de usuarios y desarrollo de reportes ciudadanos con evidencia. |
+| Sebastian Truque | Buscador y filtros; participación en el panel administrativo. |
+| Karol Bermudez | Registro y preguntas frecuentes; participación en buscador y panel administrativo. |
 
-### Integrantes
+Las responsabilidades se resumen a partir de la distribución de trabajo por sprints del proyecto.
 
-- **Huber Gonzalez**
-- **Sebastian Truque**
-- **Karol Bermudez**
+## Funcionalidades disponibles
 
----
+- Consulta de servicios informativos desde la página principal.
+- Búsqueda por texto y filtros de categoría en el listado de servicios.
+- Registro e inicio de sesión con correo y contraseña.
+- Inicio de sesión opcional con Google OAuth, si se configuran sus credenciales.
+- Creación de reportes con categoría, ubicación, descripción y evidencia opcional.
+- Consulta de reportes propios para ciudadanos y de todos los reportes para administradores.
+- Actualización del estado de reportes por administradores.
+- Tema claro/oscuro y diseño adaptable.
 
-## ¿Por qué hicimos VozYControl?
+Los estados disponibles son `Pendiente`, `En curso` y `Resuelto`. Las categorías de reporte son `Agua potable`, `Salud`, `Educación` y `Energía`.
 
-A veces no es fácil encontrar información clara sobre un servicio, saber dónde acudir o dejar constancia de un problema. Por eso pensamos en VozYControl: una plataforma que reúne información básica de servicios y permite registrar situaciones que afectan a la comunidad, para que cada reporte quede documentado y se pueda consultar su estado.
+## Tecnologías
 
-## ¿Qué se puede hacer en la plataforma?
-
-### Consulta de servicios
-
-- Página principal con tarjetas informativas de servicios.
-- Búsqueda de servicios por texto.
-- Filtros por categoría: Todos, Salud, Agua, Educación y Energía.
-- Acceso a información descriptiva de cada servicio.
-
-### Registro y autenticación
-
-- Creación de cuentas con nombre, correo y contraseña.
-- Inicio y cierre de sesión.
-- Contraseñas almacenadas mediante hash con bcrypt.
-- Autenticación basada en JSON Web Tokens (JWT).
-- Token de sesión almacenado en una cookie protegida `HttpOnly`.
-- Inicio de sesión con Google mediante Passport y OAuth 2.0, cuando se configuran las credenciales correspondientes.
-
-### Reportes ciudadanos
-
-- Creación de reportes asociados al usuario autenticado.
-- Selección de categoría, ubicación y descripción.
-- Adjuntar una evidencia opcional en formato JPG, PNG, WEBP o PDF.
-- Límite de tamaño de archivo de 5 MB.
-- Almacenamiento de los reportes en MongoDB Atlas.
-- Consulta de los reportes propios y visualización de su estado.
-
-### Panel y administración
-
-- Panel personal con resumen de reportes activos y resueltos.
-- Los ciudadanos solo pueden consultar sus propios reportes.
-- Los administradores pueden consultar todos los reportes.
-- Los administradores pueden cambiar el estado de un reporte entre **Pendiente**, **En curso** y **Resuelto**.
-- La API verifica el rol del usuario en el servidor antes de permitir cambios de estado; ocultar controles en la interfaz no sustituye esta validación.
-
-### Navegación y experiencia de usuario
-
-- Navegación entre Inicio, Buscar, Reportar y Perfil.
-- La navegación pública consulta la sesión activa para ofrecer acceso al panel sin pedir un nuevo inicio de sesión innecesario.
-- Alternancia entre modo claro y modo oscuro.
-- Diseño adaptable a distintos tamaños de pantalla.
-- Etiquetas y controles accesibles, mensajes de validación y navegación mediante teclado.
-
----
-
-## Tipos de usuario y permisos
-
-VozYControl cuenta con dos roles:
-
-| Rol | Permisos |
+| Área | Tecnología |
 |---|---|
-| `ciudadano` | Crear reportes y consultar únicamente los reportes asociados a su cuenta. |
-| `admin` | Consultar todos los reportes y actualizar el estado de cualquiera de ellos. |
+| Front-end | HTML5, CSS3 y JavaScript |
+| Back-end / API | Node.js y Express 5 |
+| Base de datos | MongoDB / MongoDB Atlas |
+| ODM | Mongoose |
+| Autenticación | JWT, bcryptjs y cookies HttpOnly |
+| OAuth opcional | Passport y passport-google-oauth20 |
+| Archivos | Multer |
+| Seguridad | Helmet, CORS y express-rate-limit |
 
-Cuando alguien se registra, su cuenta queda con el rol `ciudadano`. El rol `admin` se asigna desde MongoDB Atlas a las cuentas autorizadas. Los permisos se revisan desde el servidor, así que un ciudadano no puede cambiar el estado de un reporte por su cuenta.
+El front-end está servido como archivos estáticos por Express. No hay un proceso de compilación ni un servidor de front-end separado.
 
----
-
-## Herramientas y tecnologías
-
-| Área | Tecnología | Uso |
-|---|---|---|
-| Frontend | HTML5 | Estructura de las páginas. |
-| Estilos | CSS3 | Diseño adaptable, componentes y temas visuales. |
-| Interactividad | JavaScript | Búsqueda, filtros, formularios, sesión y paneles. |
-| Backend | Node.js y Express | Servidor y API REST. |
-| Base de datos | MongoDB Atlas | Persistencia de usuarios y reportes. |
-| Modelado | Mongoose | Esquemas y consultas a MongoDB. |
-| Autenticación | JSON Web Token (JWT) | Identificación de usuarios mediante token. |
-| Contraseñas | bcryptjs | Hash y verificación de contraseñas. |
-| OAuth | Passport y passport-google-oauth20 | Inicio de sesión opcional con Google. |
-| Archivos | Multer | Recepción y validación de evidencias. |
-| Seguridad | Helmet, CORS y express-rate-limit | Cabeceras HTTP, control de orígenes y limitación de solicitudes. |
-| Cookies y sesión OAuth | cookie-parser y express-session | Lectura de cookies y estado temporal del flujo OAuth. |
-
----
-
-## Rutas principales de la API
-
-Estas son las rutas que utiliza la aplicación para gestionar usuarios y reportes:
-
-| Método | Endpoint | Descripción | Acceso |
-|---|---|---|---|
-| `POST` | `/api/auth/registro` | Registrar una cuenta nueva. | Público |
-| `POST` | `/api/auth/login` | Iniciar sesión con correo y contraseña. | Público |
-| `GET` | `/api/auth/perfil` | Consultar el perfil de la sesión actual. | Autenticado |
-| `POST` | `/api/auth/logout` | Cerrar la sesión. | Público / sesión actual |
-| `GET` | `/api/auth/google` | Iniciar autenticación con Google. | Público, si OAuth está configurado |
-| `GET` | `/api/auth/google/callback` | Recibir la respuesta de Google. | Flujo OAuth |
-| `GET` | `/api/reportes` | Consultar reportes propios o todos, según el rol. | Autenticado |
-| `POST` | `/api/reportes` | Crear un reporte y adjuntar evidencia opcional. | Autenticado |
-| `PATCH` | `/api/reportes/:id/estado` | Actualizar el estado de un reporte. | Solo administrador |
-| `GET` | `/api/health` | Comprobar el estado del servidor y la conexión a la base de datos. | Público |
-
-Los estados permitidos para un reporte son `Pendiente`, `En curso` y `Resuelto`.
-
----
-
-## ¿Cómo está organizado el proyecto?
-
-```text
-VozYControl/
-├── config/
-│   └── passport.js
-├── controllers/
-│   └── auth.controller.js
-├── middlewares/
-│   └── auth.middleware.js
-├── models/
-│   ├── Usuario.js
-│   └── Reporte.js
-├── routes/
-│   └── auth.routes.js
-├── utils/
-│   └── jwt.js
-├── css/
-│   └── styles.css
-├── js/
-│   └── main.js
-├── index.html
-├── login.html
-├── panel.html
-├── perfil.html
-├── reportar.html
-├── server.js
-├── package.json
-└── README.md
-```
-
----
-
-## Cómo ejecutar el proyecto
-
-### Requisitos
+## Requisitos
 
 - Node.js 20 o superior.
 - npm.
-- Una instancia de MongoDB Atlas o una instancia compatible de MongoDB.
+- MongoDB Atlas o una instancia compatible de MongoDB.
 - Git.
+- Un navegador actualizado.
 
-### 1. Clonar el repositorio
+## Instalación y ejecución
+
+### 1. Clonar e instalar
 
 ```bash
 git clone https://github.com/huberalexander23/VozYControl.git
 cd VozYControl
-```
-
-### 2. Instalar dependencias
-
-```bash
 npm install
 ```
 
-### 3. Configurar variables de entorno
+### 2. Configurar variables de entorno
 
-Crea un archivo llamado `.env` en la carpeta principal del proyecto y agrega la configuración básica:
+Crea un archivo `.env` en la raíz del proyecto. Puedes tomar como referencia `.env.example` y reemplazar los valores de ejemplo por tus propios datos.
+
+Variables requeridas:
+
+| Variable | Uso |
+|---|---|
+| `PORT` | Puerto del servidor. Por defecto, 3000. |
+| `MONGODB_URI` | Cadena de conexión de MongoDB. |
+| `MONGODB_DATABASE` | Nombre de la base de datos. Por defecto, `vozycontrol`. |
+| `JWT_SECRET` | Secreto para firmar los tokens; mínimo 32 caracteres. |
+| `APP_URL` | URL pública de la aplicación; se usa para validar el origen y configurar cookies seguras. |
+| `NODE_ENV` | Entorno de ejecución. Usa `development` en local y `production` al desplegar. |
+| `JWT_EXPIRES_IN` | Duración del JWT. Por defecto, `1h`. |
+
+Para habilitar Google OAuth también se requieren:
+
+| Variable | Uso |
+|---|---|
+| `GOOGLE_CLIENT_ID` | Identificador OAuth entregado por Google. |
+| `GOOGLE_CLIENT_SECRET` | Secreto OAuth entregado por Google. |
+| `GOOGLE_CALLBACK_URL` | URL de retorno configurada en Google Cloud. |
+| `OAUTH_SESSION_SECRET` | Secreto de sesión temporal del flujo OAuth; mínimo 32 caracteres cuando OAuth está habilitado. |
+
+Ejemplo local mínimo (sustituye los valores entre marcadores):
 
 ```env
 PORT=3000
 NODE_ENV=development
-MONGODB_URI=mongodb+srv://<usuario>:<password>@<cluster>/
-MONGODB_DATABASE=vozycontrol
-JWT_SECRET=<secreto_aleatorio_de_al_menos_32_caracteres>
 APP_URL=http://localhost:3000
+MONGODB_DATABASE=vozycontrol
+MONGODB_URI=mongodb+srv://<usuario>:<password>@<cluster>/
+JWT_SECRET=<secreto-aleatorio-de-al-menos-32-caracteres>
+JWT_EXPIRES_IN=1h
 ```
 
-Para habilitar el inicio de sesión con Google, configurar también:
+No subas el archivo `.env` ni publiques contraseñas, tokens o secretos. Si despliegas la aplicación en otro dominio, actualiza `APP_URL`, la lista de orígenes permitidos y la URL de retorno de Google.
 
-```env
-GOOGLE_CLIENT_ID=<client_id_de_google>
-GOOGLE_CLIENT_SECRET=<client_secret_de_google>
-GOOGLE_CALLBACK_URL=http://localhost:3000/api/auth/google/callback
-OAUTH_SESSION_SECRET=<secreto_aleatorio_de_al_menos_32_caracteres>
-```
-
-Guarda tus claves y contraseñas únicamente en el archivo local `.env`. No las publiques ni las subas a GitHub. Si vas a desplegar la aplicación en otro dominio, actualiza las URL y la configuración de Google Cloud.
-
-### 4. Iniciar el servidor
+### 3. Ejecutar
 
 Modo desarrollo:
 
@@ -221,42 +115,74 @@ Modo normal:
 npm start
 ```
 
-Abrir en el navegador:
+Abre [http://localhost:3000](http://localhost:3000). Express entrega tanto las páginas del front-end como la API; por eso no se necesita iniciar otro servidor para el front-end.
 
-```text
-http://localhost:3000
+## Usuarios de prueba por rol
+
+El repositorio no incluye usuarios de prueba ni contraseñas precargadas. Para probar los dos roles:
+
+1. Inicia la aplicación y crea una cuenta desde la pantalla de registro. Toda cuenta nueva recibe automáticamente el rol `ciudadano`.
+2. Usa esa cuenta para probar el registro y consulta de reportes de ciudadano.
+3. Para probar el rol administrador, crea otra cuenta y cambia su campo `rol` a `admin` directamente en MongoDB Atlas, en la colección `usuarios`. No existe una pantalla pública para asignar privilegios.
+4. Inicia sesión con esa segunda cuenta para probar la consulta global y el cambio de estado de reportes.
+
+Ejemplo de documento a actualizar en MongoDB (reemplaza el correo por el de la cuenta creada):
+
+```javascript
+db.usuarios.updateOne(
+  { email: "admin.prueba@ejemplo.com" },
+  { $set: { rol: "admin" } }
+)
 ```
 
+| Rol | Usuario de prueba | Cómo obtenerlo |
+|---|---|---|
+| `ciudadano` | Cuenta creada desde el formulario de registro. | El registro asigna este rol automáticamente. |
+| `admin` | Segunda cuenta creada para pruebas. | Un responsable debe cambiar su campo `rol` a `admin` en MongoDB. |
+
+No hay contraseñas de prueba publicadas en el repositorio. Define las contraseñas al crear las cuentas y no uses credenciales reales en demostraciones.
+
+## Documentación del proyecto
+
+- [Lista de características FDD](docs/lista-de-caracteristicas.md)
+- [Roles y permisos](docs/roles-y-permisos.md)
+- [Documentación de la API](docs/api.md)
+
+## Seguridad implementada
+
+- Contraseñas almacenadas con bcrypt.
+- JWT firmado con HS256 y validado en el servidor.
+- Cookie de autenticación `HttpOnly`, `SameSite=Lax` y `Secure` cuando corresponde.
+- Verificación de identidad y permisos en el back-end.
+- Validación de datos y archivos adjuntos; se aceptan JPG, PNG, WEBP y PDF de hasta 5 MB.
+- CORS con orígenes permitidos, protección de origen en solicitudes autenticadas que modifican datos, Helmet y limitación de solicitudes.
+
+## Estructura principal
+
+```text
+VozYControl/
+├── config/                 # Configuración de Passport / Google OAuth
+├── controllers/            # Controladores de autenticación
+├── middlewares/            # Autenticación y autorización
+├── models/                 # Modelos Usuario y Reporte
+├── utils/                  # Utilidades JWT
+├── routes/                 # Rutas de autenticación
+├── css/                    # Estilos
+├── js/                     # Lógica del front-end
+├── docs/                   # Documentación funcional y técnica
+├── index.html              # Página principal
+├── login.html              # Registro e inicio de sesión
+├── panel.html              # Panel de reportes
+├── reportar.html           # Formulario de reportes
+├── perfil.html             # Perfil
+├── server.js               # Servidor Express y API de reportes
+└── package.json
+```
+
+## Alcance actual
+
+La lista FDD y la documentación de API indican qué está implementado y qué queda parcial o pendiente. Por ejemplo, el código actual no expone una operación para eliminar reportes ni incluye un mecanismo de renovación de JWT. Tampoco se incluyen usuarios de demostración ni una suite de pruebas automatizadas configurada en `package.json`.
+
 ---
 
-## Seguridad
-
-- Contraseñas protegidas mediante bcrypt.
-- JWT firmado y validado en el servidor.
-- Cookie de autenticación configurada con `HttpOnly`, `SameSite=Lax` y `Secure` cuando corresponde a HTTPS.
-- Middleware de autenticación para proteger las operaciones privadas.
-- Middleware de autorización por roles para restringir la actualización de estados al administrador.
-- Validación de categorías, ubicación, descripción y archivos adjuntos.
-- Límite de tamaño y tipos MIME permitidos para evidencias.
-- Configuración de CORS y validación del origen para solicitudes que modifican datos con sesión autenticada.
-- Limitación de solicitudes a la API y cabeceras de seguridad mediante Helmet.
-
----
-
-## Cómo organizamos el desarrollo
-
-Fuimos organizando el trabajo por funcionalidades, avanzando por etapas y revisando cada parte a medida que se iba construyendo. Primero definimos la idea y las funciones principales; después trabajamos en el desarrollo, la integración y las pruebas.
-
-### Plan de trabajo
-
-| Sprint | Trabajo del sprint | Responsables | Fecha |
-|---|---|---|---|
-| 1 | Registro de usuarios y sección de preguntas frecuentes | Huber Gonzalez y Karol Bermudez | 17/10/2026 |
-| 2 | Buscador por categoría, filtro por ubicación e información de requisitos | Sebastian Truque y Karol Bermudez | 31/10/2026 |
-| 3 | Reportes ciudadanos de fallas o negación de servicios con evidencia | Huber Gonzalez | 14/11/2026 |
-| 4 | Panel administrativo y sistema de notificaciones | Sebastian Truque y Karol Bermudez | 28/11/2026 |
-
----
-
-**VozYControl — BY Defenders**  
-*Una plataforma para consultar servicios, registrar problemas y seguir sus avances.*
+**VozYControl — BY Defenders**

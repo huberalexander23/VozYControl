@@ -1,35 +1,41 @@
 # API de VozYControl
 
-La API se ejecuta en el mismo servidor Express que entrega el front-end. En desarrollo, la URL base es `http://localhost:3000`.
+En este documento explicamos cómo se comunica nuestro front-end con el servidor. Aquí dejamos las rutas que tenemos disponibles, qué necesita cada una para funcionar y ejemplos para probarlas desde Postman o cURL.
 
-## Autenticación
+Nuestra API funciona en el mismo servidor Express que entrega las páginas del sitio. Cuando trabajamos localmente, usamos como dirección base `http://localhost:3000`.
 
-Las rutas privadas aceptan el JWT enviado en la cookie `vozy_token` (configurada como HttpOnly) o en la cabecera `Authorization: Bearer <token>`. Para peticiones desde el navegador, la aplicación usa la cookie y `credentials: "same-origin"`.
+## Antes de probar: autenticación
 
-Roles disponibles: `ciudadano` y `admin`.
+Para proteger las operaciones privadas usamos un JWT. Normalmente, el navegador lo envía en la cookie `vozy_token`, que configuramos como HttpOnly. También aceptamos el token en la cabecera `Authorization: Bearer <token>`.
 
-## Endpoints
+En nuestra aplicación web usamos la cookie y enviamos las peticiones con `credentials: "same-origin"`.
 
-| Método | Ruta | Autenticación | Roles permitidos | Descripción |
+Manejamos dos roles:
+- `ciudadano`
+- `admin`
+
+## Rutas disponibles
+
+| Método | Ruta | ¿Necesita autenticación? | Roles permitidos | ¿Para qué la usamos? |
 |---|---|---|---|---|
-| GET | `/api/health` | No | Público | Comprueba el estado del servidor y muestra el nombre de la conexión de base de datos. |
-| POST | `/api/auth/registro` | No | Público | Crea una cuenta con rol ciudadano e inicia sesión. |
-| POST | `/api/auth/login` | No | Público | Inicia sesión con correo y contraseña. |
-| GET | `/api/auth/perfil` | Sí | Ciudadano, admin | Devuelve los datos públicos del usuario autenticado. |
-| POST | `/api/auth/logout` | No obligatoria | Público / sesión actual | Elimina la cookie de autenticación. |
-| GET | `/api/auth/google` | No | Público, si OAuth está configurado | Inicia el flujo de autenticación con Google. |
-| GET | `/api/auth/google/callback` | Flujo OAuth | Usuario autenticado por Google | Recibe la respuesta de Google, establece la cookie y redirige al panel. |
-| GET | `/api/reportes` | Sí | Ciudadano, admin | Ciudadano recibe sus reportes; admin recibe todos. |
-| POST | `/api/reportes` | Sí | Ciudadano, admin | Crea un reporte; acepta evidencia opcional multipart/form-data. |
-| PATCH | `/api/reportes/:id/estado` | Sí | Solo admin | Cambia el estado de un reporte existente. |
+| GET | `/api/health` | No | Público | Revisamos que el servidor responda y consultamos el nombre de la base de datos conectada. |
+| POST | `/api/auth/registro` | No | Público | Creamos una cuenta ciudadana y dejamos iniciada su sesión. |
+| POST | `/api/auth/login` | No | Público | Permitimos entrar con correo y contraseña. |
+| GET | `/api/auth/perfil` | Sí | Ciudadano, admin | Consultamos los datos del usuario que inició sesión. |
+| POST | `/api/auth/logout` | No obligatoria | Público / sesión actual | Cerramos la sesión limpiando la cookie de autenticación. |
+| GET | `/api/auth/google` | No | Público, si configuramos OAuth | Comenzamos el inicio de sesión con Google. |
+| GET | `/api/auth/google/callback` | Flujo OAuth | Usuario autenticado por Google | Recibimos la respuesta de Google, creamos la sesión y redirigimos al panel. |
+| GET | `/api/reportes` | Sí | Ciudadano, admin | Mostramos los reportes propios o todos, dependiendo del rol. |
+| POST | `/api/reportes` | Sí | Ciudadano, admin | Guardamos un nuevo reporte y, si se adjunta, su evidencia. |
+| PATCH | `/api/reportes/:id/estado` | Sí | Solo admin | Actualizamos el estado de un reporte. |
 
-No existe actualmente un endpoint para eliminar reportes ni para administrar usuarios o asignar roles.
+Por ahora no hemos creado rutas para eliminar reportes, administrar usuarios ni cambiar roles desde la aplicación.
 
-## Ejemplos de petición y respuesta
+## Ejemplos para probar la API
 
-Los ejemplos usan `http://localhost:3000`. Los identificadores y datos son ilustrativos.
+Los ejemplos usan `http://localhost:3000`. Los identificadores y datos que aparecen son de muestra; al probar en nuestra base de datos debemos usar los valores que nos devuelva el servidor.
 
-### 1. Registrar ciudadano
+### 1. Registrar una cuenta ciudadana
 
 **Petición**
 
@@ -46,7 +52,7 @@ Content-Type: application/json
 }
 ```
 
-**Respuesta (201)**
+**Respuesta esperada (201)**
 
 ```json
 {
@@ -60,7 +66,7 @@ Content-Type: application/json
 }
 ```
 
-La respuesta también establece la cookie `vozy_token`.
+Además de devolver los datos públicos de la cuenta, el servidor establece la cookie `vozy_token`. El registro siempre asigna el rol `ciudadano`.
 
 ### 2. Iniciar sesión
 
@@ -78,7 +84,7 @@ Content-Type: application/json
 }
 ```
 
-**Respuesta (200)**
+**Respuesta esperada (200)**
 
 ```json
 {
@@ -92,7 +98,9 @@ Content-Type: application/json
 }
 ```
 
-### 3. Consultar perfil
+Cuando iniciamos sesión correctamente, el servidor también envía la cookie de autenticación.
+
+### 3. Consultar el perfil
 
 **Petición**
 
@@ -101,7 +109,7 @@ GET /api/auth/perfil
 Cookie: vozy_token=<token>
 ```
 
-**Respuesta (200)**
+**Respuesta esperada (200)**
 
 ```json
 {
@@ -114,6 +122,8 @@ Cookie: vozy_token=<token>
 }
 ```
 
+Con esta ruta consultamos quién inició sesión y qué rol tiene.
+
 ### 4. Consultar reportes
 
 **Petición**
@@ -123,7 +133,7 @@ GET /api/reportes
 Cookie: vozy_token=<token>
 ```
 
-**Respuesta (200)**
+**Respuesta de ejemplo (200)**
 
 ```json
 {
@@ -144,11 +154,11 @@ Cookie: vozy_token=<token>
 }
 ```
 
-Un ciudadano solo recibe documentos asociados a su cuenta. Un administrador recibe el conjunto de reportes.
+La respuesta depende del rol con el que entramos: si usamos una cuenta ciudadana, recibimos sus propios reportes; si usamos una cuenta administradora, recibimos todos.
 
-### 5. Crear reporte
+### 5. Crear un reporte
 
-El endpoint espera `multipart/form-data`. La evidencia es opcional y debe ser JPG, PNG, WEBP o PDF, con máximo 5 MB.
+Para crear un reporte enviamos los campos como `multipart/form-data`. La evidencia es opcional. Si adjuntamos un archivo, aceptamos JPG, PNG, WEBP o PDF de máximo 5 MB.
 
 **Petición con cURL**
 
@@ -161,7 +171,7 @@ curl -X POST http://localhost:3000/api/reportes \
   -F "evidencia=@./evidencia.jpg"
 ```
 
-**Respuesta (201)**
+**Respuesta esperada (201)**
 
 ```json
 {
@@ -183,7 +193,11 @@ curl -X POST http://localhost:3000/api/reportes \
 }
 ```
 
-### 6. Actualizar estado (solo admin)
+Si no adjuntamos un archivo, el reporte se guarda con `evidence: null`. Al crearlo, su estado inicial es `Pendiente`.
+
+### 6. Actualizar el estado de un reporte (solo administrador)
+
+Esta operación está reservada para el rol `admin`. En el ejemplo cambiamos el estado a `En curso`.
 
 **Petición**
 
@@ -199,7 +213,7 @@ Cookie: vozy_token=<token>
 }
 ```
 
-**Respuesta (200)**
+**Respuesta esperada (200)**
 
 ```json
 {
@@ -215,7 +229,7 @@ Cookie: vozy_token=<token>
 }
 ```
 
-Los estados admitidos son `Pendiente`, `En curso` y `Resuelto`.
+Los únicos estados que aceptamos son `Pendiente`, `En curso` y `Resuelto`. Si intentamos cambiarlo con una cuenta ciudadana, el servidor rechaza la operación.
 
 ### 7. Cerrar sesión
 
@@ -225,7 +239,7 @@ Los estados admitidos son `Pendiente`, `En curso` y `Resuelto`.
 POST /api/auth/logout
 ```
 
-**Respuesta (200)**
+**Respuesta esperada (200)**
 
 ```json
 {
@@ -233,9 +247,9 @@ POST /api/auth/logout
 }
 ```
 
-El servidor envía una instrucción para limpiar la cookie `vozy_token`.
+Con esta operación limpiamos la cookie `vozy_token` del navegador.
 
-### 8. Comprobar disponibilidad
+### 8. Comprobar que el servidor está disponible
 
 **Petición**
 
@@ -243,7 +257,7 @@ El servidor envía una instrucción para limpiar la cookie `vozy_token`.
 GET /api/health
 ```
 
-**Respuesta (200)**
+**Respuesta esperada (200)**
 
 ```json
 {
@@ -252,25 +266,27 @@ GET /api/health
 }
 ```
 
-## Validaciones y códigos de respuesta
+Usamos esta ruta para comprobar que el servidor responde y que tenemos una conexión activa con la base de datos.
 
-| Código | Significado / casos habituales |
+## Respuestas y errores que podemos encontrar
+
+| Código | Qué significa |
 |---|---|
-| 200 | Operación correcta. |
-| 201 | Registro de usuario o reporte creado. |
-| 400 | Datos inválidos, categoría o estado no permitido, archivo no válido, archivo mayor de 5 MB o identificador mal formado. |
-| 401 | No hay sesión válida, el token expiró o las credenciales no son correctas. |
-| 403 | El usuario no tiene el rol requerido o el origen de una petición autenticada no está permitido. |
-| 404 | No se encontró el reporte solicitado. |
+| 200 | La operación se completó correctamente. |
+| 201 | Creamos un usuario o un reporte. |
+| 400 | Algún dato no es válido, el estado o categoría no está permitido, el archivo no cumple los requisitos o el identificador está mal formado. |
+| 401 | Falta iniciar sesión, el token no es válido o las credenciales son incorrectas. |
+| 403 | La cuenta no tiene permiso para esa operación o el origen de la solicitud no está permitido. |
+| 404 | No encontramos el reporte solicitado. |
 | 409 | El correo ya está registrado. |
-| 503 | Google OAuth no está configurado y se intenta iniciar ese flujo. |
-| 500 | Error interno no controlado. |
+| 503 | Intentamos usar Google OAuth, pero todavía no está configurado. |
+| 500 | Ocurrió un error interno del servidor. |
 
-El registro y el inicio de sesión tienen un límite de 8 intentos por 15 minutos. La API también aplica un límite general de solicitudes.
+También aplicamos límites a las solicitudes: para el registro y el inicio de sesión permitimos hasta 8 intentos en un periodo de 15 minutos. La API cuenta además con un límite general de solicitudes.
 
-## Notas para probar
+## Recomendaciones para hacer las pruebas
 
-- Registra primero un ciudadano desde `POST /api/auth/registro`.
-- Para probar operaciones de administrador, crea otra cuenta y cambia su campo `rol` a `admin` directamente en MongoDB.
-- En Postman, conserva la cookie que devuelve el login o envía el JWT como Bearer token.
-- Para el endpoint de reportes, selecciona el tipo de cuerpo `form-data`; no envíes el archivo como JSON.
+- Primero registramos una cuenta ciudadana desde `POST /api/auth/registro`.
+- Para probar las funciones de administración, creamos otra cuenta y cambiamos su campo `rol` a `admin` directamente en MongoDB.
+- En Postman podemos conservar la cookie que recibimos al iniciar sesión o enviar el JWT en la cabecera Bearer.
+- Cuando creamos un reporte, seleccionamos `form-data` como tipo de cuerpo. Si adjuntamos evidencia, la agregamos como archivo y no como texto JSON.

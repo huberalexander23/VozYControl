@@ -1,93 +1,107 @@
 # VozYControl
 
-Plataforma web para consultar información de servicios y registrar problemas que afectan a la comunidad. Los ciudadanos pueden crear reportes, adjuntar evidencias y consultar su estado. Los administradores pueden revisar todos los reportes y actualizar su estado.
+## ¿Qué es VozYControl?
 
-## Equipo y responsabilidades
+VozYControl es el proyecto que desarrollamos para que las personas puedan consultar información sobre algunos servicios y reportar situaciones que afectan a su comunidad. Queremos que el proceso sea sencillo: una persona entra a la plataforma, registra lo que está ocurriendo, puede adjuntar una evidencia y después consulta cómo avanza su reporte.
+
+Para organizar el acceso, trabajamos con dos tipos de usuario: **ciudadano** y **administrador**. El ciudadano crea y consulta sus propios reportes; el administrador puede revisar todos los reportes y actualizar su estado.
+
+## Nuestro equipo
 
 **Grupo:** BY Defenders  
 **Asignatura:** Programación Orientada a la Web  
 **Periodo:** 2026B
 
-| Integrante | Responsabilidad documentada en el plan de trabajo |
+| Integrante | Trabajo asignado dentro del proyecto |
 |---|---|
 | Huber Gonzalez | Registro de usuarios y desarrollo de reportes ciudadanos con evidencia. |
 | Sebastian Truque | Buscador y filtros; participación en el panel administrativo. |
-| Karol Bermudez | Registro y preguntas frecuentes; participación en buscador y panel administrativo. |
+| Karol Bermudez | Registro y preguntas frecuentes; participación en el buscador y el panel administrativo. |
 
-Las responsabilidades se resumen a partir de la distribución de trabajo por sprints del proyecto.
+Distribuimos estas responsabilidades por etapas de trabajo. En las características compartidas aparecen los integrantes que participaron según la planificación de nuestros sprints.
 
-## Funcionalidades disponibles
+## ¿Qué hemos desarrollado?
 
-- Consulta de servicios informativos desde la página principal.
-- Búsqueda por texto y filtros de categoría en el listado de servicios.
+Estas son las funciones que podemos encontrar en la versión actual:
+
+- Una página principal donde presentamos información de servicios.
+- Un buscador para encontrar servicios por texto y categoría.
 - Registro e inicio de sesión con correo y contraseña.
-- Inicio de sesión opcional con Google OAuth, si se configuran sus credenciales.
-- Creación de reportes con categoría, ubicación, descripción y evidencia opcional.
-- Consulta de reportes propios para ciudadanos y de todos los reportes para administradores.
-- Actualización del estado de reportes por administradores.
-- Tema claro/oscuro y diseño adaptable.
+- Inicio de sesión con Google, siempre que configuremos las credenciales de OAuth.
+- Un formulario para crear reportes con categoría, ubicación y descripción.
+- La opción de adjuntar una evidencia al reporte.
+- Un panel donde cada ciudadano consulta sus reportes y su estado.
+- Una vista administrativa desde la que se pueden consultar todos los reportes y cambiar su estado.
+- Modo claro y oscuro, además de una interfaz que se adapta a diferentes tamaños de pantalla.
 
-Los estados disponibles son `Pendiente`, `En curso` y `Resuelto`. Las categorías de reporte son `Agua potable`, `Salud`, `Educación` y `Energía`.
+Para los reportes definimos cuatro categorías: `Agua potable`, `Salud`, `Educación` y `Energía`. También manejamos tres estados: `Pendiente`, `En curso` y `Resuelto`.
 
-## Tecnologías
+## Tecnologías que utilizamos
 
-| Área | Tecnología |
-|---|---|
-| Front-end | HTML5, CSS3 y JavaScript |
-| Back-end / API | Node.js y Express 5 |
-| Base de datos | MongoDB / MongoDB Atlas |
-| ODM | Mongoose |
-| Autenticación | JWT, bcryptjs y cookies HttpOnly |
-| OAuth opcional | Passport y passport-google-oauth20 |
-| Archivos | Multer |
-| Seguridad | Helmet, CORS y express-rate-limit |
+| Parte del proyecto | Tecnología | Para qué la usamos |
+|---|---|---|
+| Front-end | HTML5, CSS3 y JavaScript | Construimos las páginas, los estilos y las interacciones. |
+| Back-end | Node.js y Express 5 | Creamos el servidor y las rutas de nuestra API. |
+| Base de datos | MongoDB / MongoDB Atlas | Guardamos la información de usuarios y reportes. |
+| Modelado de datos | Mongoose | Definimos los modelos y trabajamos con MongoDB. |
+| Autenticación | JWT, bcryptjs y cookies HttpOnly | Protegemos las sesiones y las contraseñas. |
+| Inicio con Google | Passport y passport-google-oauth20 | Permitimos el acceso con una cuenta de Google cuando configuramos OAuth. |
+| Archivos | Multer | Recibimos y validamos las evidencias adjuntas. |
+| Seguridad | Helmet, CORS y express-rate-limit | Añadimos protecciones al servidor y controlamos las solicitudes. |
 
-El front-end está servido como archivos estáticos por Express. No hay un proceso de compilación ni un servidor de front-end separado.
+En nuestro caso, Express también se encarga de servir los archivos del front-end. Por eso no necesitamos levantar un servidor adicional para abrir la página.
 
-## Requisitos
+## ¿Qué necesitamos para ejecutarlo?
 
-- Node.js 20 o superior.
+Antes de iniciar, debemos tener instalado:
+
+- Node.js 20 o una versión superior.
 - npm.
-- MongoDB Atlas o una instancia compatible de MongoDB.
 - Git.
+- Una base de datos MongoDB Atlas o una instancia compatible.
 - Un navegador actualizado.
 
 ## Instalación y ejecución
 
-### 1. Clonar e instalar
+### 1. Descargar el proyecto
+
+Clonamos el repositorio y entramos en la carpeta:
 
 ```bash
 git clone https://github.com/huberalexander23/VozYControl.git
 cd VozYControl
+```
+
+Después instalamos las dependencias:
+
+```bash
 npm install
 ```
 
-### 2. Configurar variables de entorno
+### 2. Configurar las variables de entorno
 
-Crea un archivo `.env` en la raíz del proyecto. Puedes tomar como referencia `.env.example` y reemplazar los valores de ejemplo por tus propios datos.
+En la carpeta principal creamos un archivo llamado `.env`. Podemos guiarnos por el archivo `.env.example`, pero debemos reemplazar los valores de ejemplo por los nuestros.
 
-Variables requeridas:
-
-| Variable | Uso |
+| Variable | Para qué la utilizamos |
 |---|---|
-| `PORT` | Puerto del servidor. Por defecto, 3000. |
-| `MONGODB_URI` | Cadena de conexión de MongoDB. |
-| `MONGODB_DATABASE` | Nombre de la base de datos. Por defecto, `vozycontrol`. |
-| `JWT_SECRET` | Secreto para firmar los tokens; mínimo 32 caracteres. |
-| `APP_URL` | URL pública de la aplicación; se usa para validar el origen y configurar cookies seguras. |
-| `NODE_ENV` | Entorno de ejecución. Usa `development` en local y `production` al desplegar. |
-| `JWT_EXPIRES_IN` | Duración del JWT. Por defecto, `1h`. |
+| `PORT` | Define el puerto del servidor. Si no indicamos uno, usamos el 3000. |
+| `MONGODB_URI` | Contiene la dirección de conexión a MongoDB. |
+| `MONGODB_DATABASE` | Indica el nombre de la base de datos. Por defecto usamos `vozycontrol`. |
+| `JWT_SECRET` | Es el secreto con el que firmamos los tokens. Debe tener al menos 32 caracteres. |
+| `APP_URL` | Es la dirección de nuestra aplicación y nos ayuda a validar el origen de las solicitudes. |
+| `NODE_ENV` | Nos permite indicar si estamos trabajando en desarrollo o producción. |
+| `JWT_EXPIRES_IN` | Define cuánto dura el token. Si no lo configuramos, dura una hora. |
 
-Para habilitar Google OAuth también se requieren:
+Si queremos habilitar el inicio de sesión con Google, también configuramos:
 
-| Variable | Uso |
+| Variable | Para qué la utilizamos |
 |---|---|
-| `GOOGLE_CLIENT_ID` | Identificador OAuth entregado por Google. |
-| `GOOGLE_CLIENT_SECRET` | Secreto OAuth entregado por Google. |
-| `GOOGLE_CALLBACK_URL` | URL de retorno configurada en Google Cloud. |
-| `OAUTH_SESSION_SECRET` | Secreto de sesión temporal del flujo OAuth; mínimo 32 caracteres cuando OAuth está habilitado. |
+| `GOOGLE_CLIENT_ID` | Identificador de nuestra aplicación en Google Cloud. |
+| `GOOGLE_CLIENT_SECRET` | Clave secreta que nos entrega Google. |
+| `GOOGLE_CALLBACK_URL` | Dirección a la que Google devuelve al usuario después de autenticarse. |
+| `OAUTH_SESSION_SECRET` | Secreto que usamos para la sesión temporal del proceso OAuth. Debe tener al menos 32 caracteres. |
 
-Ejemplo local mínimo (sustituye los valores entre marcadores):
+Ejemplo de configuración local:
 
 ```env
 PORT=3000
@@ -99,34 +113,35 @@ JWT_SECRET=<secreto-aleatorio-de-al-menos-32-caracteres>
 JWT_EXPIRES_IN=1h
 ```
 
-No subas el archivo `.env` ni publiques contraseñas, tokens o secretos. Si despliegas la aplicación en otro dominio, actualiza `APP_URL`, la lista de orígenes permitidos y la URL de retorno de Google.
+Los valores entre marcadores son datos que debemos reemplazar. No debemos subir el archivo `.env` a GitHub ni compartir contraseñas o secretos. Si cambiamos el dominio donde ejecutamos el proyecto, también debemos revisar `APP_URL`, los orígenes permitidos y la dirección de retorno de Google.
 
-### 3. Ejecutar
+### 3. Poner en marcha el proyecto
 
-Modo desarrollo:
+Para trabajar en desarrollo ejecutamos:
 
 ```bash
 npm run dev
 ```
 
-Modo normal:
+Si queremos iniciarlo de forma normal usamos:
 
 ```bash
 npm start
 ```
 
-Abre [http://localhost:3000](http://localhost:3000). Express entrega tanto las páginas del front-end como la API; por eso no se necesita iniciar otro servidor para el front-end.
+Luego abrimos [http://localhost:3000](http://localhost:3000). Desde esa dirección podemos entrar al front-end y utilizar la API, porque ambos funcionan desde el mismo servidor Express.
 
-## Usuarios de prueba por rol
+## ¿Cómo probamos los roles?
 
-El repositorio no incluye usuarios de prueba ni contraseñas precargadas. Para probar los dos roles:
+En el repositorio no dejamos usuarios ni contraseñas de prueba precargados. Para revisar los dos tipos de cuenta, seguimos estos pasos:
 
-1. Inicia la aplicación y crea una cuenta desde la pantalla de registro. Toda cuenta nueva recibe automáticamente el rol `ciudadano`.
-2. Usa esa cuenta para probar el registro y consulta de reportes de ciudadano.
-3. Para probar el rol administrador, crea otra cuenta y cambia su campo `rol` a `admin` directamente en MongoDB Atlas, en la colección `usuarios`. No existe una pantalla pública para asignar privilegios.
-4. Inicia sesión con esa segunda cuenta para probar la consulta global y el cambio de estado de reportes.
+1. Iniciamos el proyecto y creamos una cuenta desde el formulario de registro. El sistema le asigna automáticamente el rol `ciudadano`.
+2. Entramos con esa cuenta y probamos la creación y consulta de reportes.
+3. Para probar el administrador, registramos una segunda cuenta.
+4. Desde MongoDB Atlas buscamos esa cuenta en la colección `usuarios` y cambiamos su campo `rol` a `admin`.
+5. Cerramos sesión, entramos con la segunda cuenta y probamos la vista administrativa.
 
-Ejemplo de documento a actualizar en MongoDB (reemplaza el correo por el de la cuenta creada):
+Este es un ejemplo del cambio que hacemos en MongoDB Shell; debemos reemplazar el correo por el de nuestra cuenta:
 
 ```javascript
 db.usuarios.updateOne(
@@ -135,54 +150,59 @@ db.usuarios.updateOne(
 )
 ```
 
-| Rol | Usuario de prueba | Cómo obtenerlo |
+| Rol | Cómo lo conseguimos | Qué podemos probar |
 |---|---|---|
-| `ciudadano` | Cuenta creada desde el formulario de registro. | El registro asigna este rol automáticamente. |
-| `admin` | Segunda cuenta creada para pruebas. | Un responsable debe cambiar su campo `rol` a `admin` en MongoDB. |
+| `ciudadano` | Nos registramos desde el formulario. | Crear reportes y consultar únicamente los propios. |
+| `admin` | Creamos otra cuenta y cambiamos su rol en MongoDB. | Consultar todos los reportes y actualizar sus estados. |
 
-No hay contraseñas de prueba publicadas en el repositorio. Define las contraseñas al crear las cuentas y no uses credenciales reales en demostraciones.
+No publicamos contraseñas de prueba. Para una demostración, creamos cuentas propias y usamos claves que no correspondan a cuentas personales.
 
-## Documentación del proyecto
+## Documentación que preparamos
 
-- [Lista de características FDD](docs/lista-de-caracteristicas.md)
-- [Roles y permisos](docs/roles-y-permisos.md)
-- [Documentación de la API](docs/api.md)
+Para que sea más fácil entender y revisar el proyecto, organizamos la información en estos documentos:
 
-## Seguridad implementada
+- [Lista de características FDD](docs/lista-de-caracteristicas.md): reunimos las funciones, sus responsables y su estado.
+- [Roles y permisos](docs/roles-y-permisos.md): explicamos qué puede hacer cada tipo de usuario.
+- [API](docs/api.md): describimos las rutas del servidor y mostramos ejemplos de uso.
 
-- Contraseñas almacenadas con bcrypt.
-- JWT firmado con HS256 y validado en el servidor.
-- Cookie de autenticación `HttpOnly`, `SameSite=Lax` y `Secure` cuando corresponde.
-- Verificación de identidad y permisos en el back-end.
-- Validación de datos y archivos adjuntos; se aceptan JPG, PNG, WEBP y PDF de hasta 5 MB.
-- CORS con orígenes permitidos, protección de origen en solicitudes autenticadas que modifican datos, Helmet y limitación de solicitudes.
+## ¿Qué tenemos en cuenta sobre la seguridad?
 
-## Estructura principal
+Durante el desarrollo incorporamos varias medidas para proteger la aplicación:
+
+- Guardamos las contraseñas usando bcrypt, no como texto plano.
+- Firmamos los JWT con HS256 y verificamos el token desde el servidor.
+- Utilizamos una cookie `HttpOnly` para la autenticación.
+- Comprobamos los permisos antes de permitir operaciones administrativas.
+- Validamos los datos y las evidencias que se adjuntan. Aceptamos JPG, PNG, WEBP y PDF de hasta 5 MB.
+- Configuramos CORS, Helmet y límites para controlar las solicitudes.
+
+## Organización de las carpetas
 
 ```text
 VozYControl/
-├── config/                 # Configuración de Passport / Google OAuth
+├── config/                 # Configuración de Passport y Google OAuth
 ├── controllers/            # Controladores de autenticación
-├── middlewares/            # Autenticación y autorización
-├── models/                 # Modelos Usuario y Reporte
-├── utils/                  # Utilidades JWT
+├── middlewares/            # Verificación de sesión y permisos
+├── models/                 # Modelos de usuarios y reportes
+├── utils/                  # Funciones auxiliares, como JWT
 ├── routes/                 # Rutas de autenticación
-├── css/                    # Estilos
-├── js/                     # Lógica del front-end
-├── docs/                   # Documentación funcional y técnica
+├── css/                    # Estilos de la interfaz
+├── js/                     # Funciones del front-end
+├── docs/                   # Documentación del proyecto
 ├── index.html              # Página principal
 ├── login.html              # Registro e inicio de sesión
 ├── panel.html              # Panel de reportes
-├── reportar.html           # Formulario de reportes
-├── perfil.html             # Perfil
+├── reportar.html            # Formulario para crear reportes
+├── perfil.html             # Perfil del usuario
 ├── server.js               # Servidor Express y API de reportes
 └── package.json
 ```
 
-## Alcance actual
+## Estado actual del proyecto
 
-La lista FDD y la documentación de API indican qué está implementado y qué queda parcial o pendiente. Por ejemplo, el código actual no expone una operación para eliminar reportes ni incluye un mecanismo de renovación de JWT. Tampoco se incluyen usuarios de demostración ni una suite de pruebas automatizadas configurada en `package.json`.
+En la documentación dejamos separado lo que ya funciona de lo que todavía no hemos desarrollado por completo. Por ejemplo, actualmente no contamos con una opción para eliminar reportes ni con un sistema para renovar automáticamente los JWT. Tampoco tenemos usuarios de demostración precargados ni una suite de pruebas automatizadas configurada en el proyecto.
 
 ---
 
-**VozYControl — BY Defenders**
+**VozYControl — BY Defenders**  
+*Este proyecto lo construimos pensando en facilitar la consulta de información y el seguimiento de los reportes ciudadanos.*
